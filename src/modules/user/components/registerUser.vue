@@ -3,14 +3,14 @@
     <h1>Registro</h1>
     <Form @submit="enviarFormulario" v-slot="{ errors }">
       <div>
-        <label for="nombre">Nombre:</label>
-        <Field id="nombre" name="nombre" type="text" v-model="datosFormulario.nombre" :rules="'required'" />
-        <RegisterError name="nombre" />
+        <label for="name">Nombre:</label>
+        <Field id="name" name="name" type="text" v-model="datosFormulario.name" :rules="'required'" />
+        <RegisterError name="name" />
       </div>
       <div>
-        <label for="apellidos">Apellidos:</label>
-        <Field id="apellidos" name="apellidos" type="text" v-model="datosFormulario.apellidos" :rules="'required'" />
-        <RegisterError name="apellidos" />
+        <label for="lastName">Apellidos:</label>
+        <Field id="lastName" name="lastName" type="text" v-model="datosFormulario.lastName" :rules="'required'" />
+        <RegisterError name="lastName" />
       </div>
       <div>
         <label for="dni">DNI:</label>
@@ -18,10 +18,9 @@
         <RegisterError name="dni" />
       </div>
       <div>
-        <label for="correoElectronico">Correo Electrónico:</label>
-        <Field id="correoElectronico" name="correoElectronico" type="email" v-model="datosFormulario.correoElectronico"
-          :rules="'required|email'" />
-        <RegisterError name="correoElectronico" />
+        <label for="email">Correo Electrónico:</label>
+        <Field id="email" name="email" type="email" v-model="datosFormulario.email" :rules="'required|email'" />
+        <RegisterError name="email" />
       </div>
       <div>
         <label for="password">Contraseña:</label>
@@ -30,10 +29,10 @@
         <RegisterError name="password" />
       </div>
       <div>
-        <label for="confirmarPassword">Confirma la contraseña:</label>
-        <Field id="confirmarPassword" name="confirmarPassword" type="password"
-          v-model="datosFormulario.confirmarPassword" :rules="reglasConfirmarPassword" />
-        <RegisterError name="confirmarPassword" />
+        <label for="confirmPassword">Confirma la contraseña:</label>
+        <Field id="confirmPassword" name="confirmPassword" type="password" v-model="datosFormulario.confirmPassword"
+          :rules="reglasConfirmPassword" />
+        <RegisterError name="confirmPassword" />
       </div>
       <div>
         <Field name="aceptoTerminos" type="checkbox" v-model="datosFormulario.aceptoTerminos" :value="true"
@@ -44,17 +43,28 @@
 
       <button type="submit" :disabled="Object.keys(errors).length > 0">Enviar</button>
     </Form>
+
+    <!-- Mostrar solo error global -->
+    <div v-if="errorGlobal" class="error-global">
+      {{ errorGlobal }}
+    </div>
+
+    <div v-if="mensajeExito" class="mensaje-exito">
+      {{ mensajeExito }}
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-import { Field, Form } from 'vee-validate'
-import { email, min } from '@vee-validate/rules'
-import { defineRule } from 'vee-validate'
-import RegisterError from '../../error/RegisterError.vue'
+import { ref, computed } from 'vue';
+import { Field, Form } from 'vee-validate';
+import { email, min } from '@vee-validate/rules';
+import { defineRule } from 'vee-validate';
+import RegisterError from '../../error/registerError.vue';
+import { datosStore } from '../../../stores/registerUser.js';
 
-// Añadimos las reglas de validación
+const store = datosStore();
+
 defineRule('required', (value) => {
   if (!value || value.trim() === '') {
     return 'Este campo es obligatorio';
@@ -80,7 +90,7 @@ defineRule('dni', (value) => {
   return true;
 });
 
-const reglasConfirmarPassword = computed(() => {
+const reglasConfirmPassword = computed(() => {
   return (value) => {
     if (!value) {
       return 'La confirmación de contraseña es obligatoria';
@@ -93,57 +103,54 @@ const reglasConfirmarPassword = computed(() => {
 });
 
 const datosFormulario = ref({
-  nombre: '',
-  apellidos: '',
+  name: '',
+  lastName: '',
   dni: '',
-  correoElectronico: '',
+  email: '',
   password: '',
-  confirmarPassword: '',
+  confirmPassword: '',
   aceptoTerminos: false
 });
 
+const mensajeExito = ref('');
 
+const errorGlobal = computed(() => store.error || '');
 
+const enviarFormulario = async () => {
+  try {
+    const usuario = {
+      name: datosFormulario.value.name,
+      lastName: datosFormulario.value.lastName,
+      dni: datosFormulario.value.dni,
+      email: datosFormulario.value.email,
+      password: datosFormulario.value.password,
+    };
 
-// Controlar el envío del formulario
-const enviarFormulario = (value) => {
-  console.log('Formulario enviado', value);
+    await store.registrarUsuario(usuario);
+
+    if (!store.error) {
+      mensajeExito.value = 'Registrado correctamente';
+    }
+  } catch (error) {
+    console.error('Error completo:', error);
+  }
 };
 </script>
 
 <style scoped>
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-label {
+.error-global {
   font-weight: bold;
-}
-
-input {
+  background-color: #ffe6e6;
+  border: 1px solid red;
   padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-button {
-  padding: 0.5rem 1rem;
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-button:disabled {
-  background-color: #cccccc;
-  cursor: not-allowed;
-}
-
-.error {
+  margin-top: 1rem;
+  border-radius: 5px;
   color: red;
-  font-size: 0.8rem;
+}
+.mensaje-exito {
+  font-weight: bold;
+  color: green;
+  margin-top: 1rem;
 }
 </style>
+

@@ -16,7 +16,7 @@ const props = defineProps({
 const { errorMessage } = useField(props.name);
 
 const mensajeErrorPersonalizado = {
-  required: 'Este campo es obligatorio'
+  
 };
 
 const mostrarMensajeError = computed(() => {

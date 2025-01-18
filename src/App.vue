@@ -1,12 +1,12 @@
 <template>
   <div>
-    <loginUser />
+    <indexWeb />
   </div>
 </template>
 
 <script setup>
 //import registerUser from './modules/user/components/registerUser.vue';
-import loginUser from './modules/user/components/loginUser.vue';
+import indexWeb from './views/indexWeb.vue';
 
 </script>
 

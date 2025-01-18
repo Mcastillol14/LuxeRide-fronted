@@ -8,9 +8,9 @@
         <loginError name="email" />
       </div>
       <div>
-        <label for="password">Contraseña:</label>
-        <Field id="password" name="password" type="password" v-model="datosFormulario.password" :rules="'required'" />
-        <loginError name="password" />
+        <label for="passwordLogin">Contraseña:</label>
+        <Field id="passwordLogin" name="passwordLogin" type="passwordLogin" v-model="datosFormulario.passwordLogin" :rules="'required'" />
+        <loginError name="passwordLogin" />
       </div>
       <div>
         <button type="submit" :disabled="Object.keys(errors).length > 0">Enviar</button>
@@ -38,7 +38,7 @@ defineRule('email', email);
 
 const datosFormulario = ref({
   email: '',
-  password: ''
+  passwordLogin: ''
 });
 
 const enviarFormulario = (value) => {
@@ -48,4 +48,4 @@ const enviarFormulario = (value) => {
 
 </script>
 
-<style scoped></style>
+<style  scoped src="../../../assets/style/loginUser.css"></style>
