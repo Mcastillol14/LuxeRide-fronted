@@ -44,7 +44,6 @@
       <button type="submit" :disabled="Object.keys(errors).length > 0">Enviar</button>
     </Form>
 
-    <!-- Mostrar solo error global -->
     <div v-if="errorGlobal" class="error-global">
       {{ errorGlobal }}
     </div>

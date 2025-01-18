@@ -1,5 +1,5 @@
 <template>
-  <span v-if="mostrarMensajeError && !esErrorGlobal" class="error">{{ mostrarMensajeError }}</span>
+  <span v-if="mostrarMensajeError" class="error">{{ mostrarMensajeError }}</span>
 </template>
 
 <script setup>
@@ -7,7 +7,7 @@ import { computed } from 'vue';
 import { useField } from 'vee-validate';
 import { datosStore } from '../../stores/registerUser.js'
 
-const store = datosStore();
+const store=datosStore();
 const props = defineProps({
   name: {
     type: String,
@@ -24,15 +24,13 @@ const mensajeErrorPersonalizado = {
   confirmarPassword: 'Las contraseñas no coinciden',
   aceptoTerminos: 'Debes aceptar los términos y condiciones'
 };
+const errorGlobal=computed(()=>store.error||'');
 
-const errorGlobal = computed(() => store.error || '');
-
-// Comprueba si el error es global (del store) o específico del campo
-const esErrorGlobal = computed(() => {
-  return errorMessage.value && errorMessage.value.toLowerCase() === errorGlobal.value?.toLowerCase();
-});
 
 const mostrarMensajeError = computed(() => {
+  if (errorGlobal.value) {
+    return errorGlobal.value;
+  }
   if (!errorMessage.value) {
     return '';
   }
