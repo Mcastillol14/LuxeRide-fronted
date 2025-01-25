@@ -5,9 +5,9 @@
 <script setup>
 import { computed } from 'vue';
 import { useField } from 'vee-validate';
-import { datosStore } from '../../stores/registerUser.js'
+import { datosStore } from '@/stores/registerUser.js'
 
-const store=datosStore();
+const store = datosStore();
 const props = defineProps({
   name: {
     type: String,
@@ -24,16 +24,20 @@ const mensajeErrorPersonalizado = {
   confirmarPassword: 'Las contraseñas no coinciden',
   aceptoTerminos: 'Debes aceptar los términos y condiciones'
 };
-const errorGlobal=computed(()=>store.error||'');
-
 
 const mostrarMensajeError = computed(() => {
-  if (errorGlobal.value) {
-    return errorGlobal.value;
+  if (store.error) {
+    if (props.name === 'dni' && store.error.toLowerCase().includes('dni')) {
+      return store.error;
+    }
+    if (props.name === 'email' && store.error.toLowerCase().includes('correo')) {
+      return store.error;
+    }
   }
   if (!errorMessage.value) {
     return '';
   }
+
   const errorKey = errorMessage.value.toLowerCase();
   return mensajeErrorPersonalizado[errorKey] || errorMessage.value;
 });
@@ -47,4 +51,3 @@ const mostrarMensajeError = computed(() => {
   margin-top: 0.25rem;
 }
 </style>
-

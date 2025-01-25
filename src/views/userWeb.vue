@@ -1,9 +1,11 @@
 <template>
-  <router-view></router-view>
+  
+<footerWeb/>
+
 </template>
 
 <script setup>
-import './assets/global/root.css';
+import footerWeb from '@/modules/main/footerIndex.vue';
 </script>
 
 <style scoped>

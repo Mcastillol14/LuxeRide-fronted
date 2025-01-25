@@ -1,0 +1,340 @@
+.hero {
+
+    height: 100vh;
+  
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 5%;
+    background:
+      radial-gradient(circle at 10% 20%, rgba(39, 174, 96, 0.05) 0%, transparent 20%),
+      radial-gradient(circle at 90% 80%, rgba(44, 62, 80, 0.05) 0%, transparent 20%),
+      url('../img/copia.svg') no-repeat 50% 50px,
+      var(--light-bg);
+    margin-top: 60px;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+      linear-gradient(45deg, var(--primary-color) 25%, transparent 25%),
+      linear-gradient(-45deg, var(--primary-color) 25%, transparent 25%);
+    background-size: 60px 60px;
+    opacity: 0.02;
+    pointer-events: none;
+  }
+  
+  .contenido-hero {
+    flex: 1;
+    padding-right: 2rem;
+  }
+  
+  .contenido-hero h1 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: var(--secondary-color);
+    margin-bottom: 1rem;
+    line-height: 1.2;
+  }
+  
+  .imagen-hero {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .acceder-boton {
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    color: var(--white);
+    border: none;
+    padding: 1.2rem 3rem;
+    margin-top: 20px;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(39, 174, 96, 0.2);
+    position: relative;
+    z-index: 1;
+  }
+  
+  .acceder-boton::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+    border-radius: 50px;
+    transition: transform 0.3s ease;
+    z-index: -1;
+    transform: scale(0);
+  }
+  
+  .acceder-boton:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(39, 174, 96, 0.3);
+  }
+  
+  .acceder-boton:hover::before {
+    transform: scale(1);
+  }
+  
+  .acceder-boton:active {
+    transform: scale(0.95);
+  }
+  
+  .acceder-boton::after {
+    display: none;
+  }
+  
+  .carousel-testimonios {
+    overflow: hidden;
+  }
+  
+  .servicios {
+    width: 100%;
+    padding: 5rem 5%;
+    background-color: var(--white);
+    background-image:
+      linear-gradient(30deg, var(--primary-color) 12%, transparent 12.5%, transparent 87%, var(--primary-color) 87.5%, var(--primary-color)),
+      linear-gradient(150deg, var(--primary-color) 12%, transparent 12.5%, transparent 87%, var(--primary-color) 87.5%, var(--primary-color)),
+      linear-gradient(30deg, var(--primary-color) 12%, transparent 12.5%, transparent 87%, var(--primary-color) 87.5%, var(--primary-color)),
+      linear-gradient(150deg, var(--primary-color) 12%, transparent 12.5%, transparent 87%, var(--primary-color) 87.5%, var(--primary-color));
+    background-size: 80px 140px;
+    background-position: 0 0, 0 0, 40px 70px, 40px 70px;
+    position: relative;
+  }
+  
+  .servicios::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.92);
+  }
+  
+  .servicios h2,
+  .servicios-grid {
+    position: relative;
+    z-index: 1;
+  }
+  
+  .tarjeta-servicio {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
+    padding: 2rem;
+    border-radius: 15px;
+    text-align: center;
+    transition: transform 0.3s ease;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+  }
+  
+  .tarjeta-servicio:hover {
+    transform: translateY(-10px);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85));
+  }
+  
+  .tarjeta-servicio h3 {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+  }
+  
+  .servicios-grid,
+  .ventajas-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .ventajas {
+    padding: 5rem 5%;
+    background: linear-gradient(135deg, var(--light-bg) 0%, #ffffff 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .ventajas::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+      linear-gradient(30deg, var(--primary-color) 12%, transparent 12.5%, transparent 87%, var(--primary-color) 87.5%, var(--primary-color)),
+      linear-gradient(150deg, var(--primary-color) 12%, transparent 12.5%, transparent 87%, var(--primary-color) 87.5%, var(--primary-color)),
+      linear-gradient(30deg, var(--primary-color) 12%, transparent 12.5%, transparent 87%, var(--primary-color) 87.5%, var(--primary-color)),
+      linear-gradient(150deg, var(--primary-color) 12%, transparent 12.5%, transparent 87%, var(--primary-color) 87.5%, var(--primary-color));
+    background-size: 80px 140px;
+    background-position: 0 0, 0 0, 40px 70px, 40px 70px;
+    opacity: 0.03;
+    pointer-events: none;
+  }
+  
+  .ventajas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .tarjeta-ventajas {
+    background-color: var(--white);
+    padding: 2rem;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .tarjeta-ventajas h3 {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+  }
+  
+  .testimonios {
+    padding: 5rem 0;
+    background-color: var(--white);
+    position: relative;
+    overflow: hidden;
+    background-image:
+      linear-gradient(0deg, transparent 24%, rgba(39, 174, 96, .05) 25%, rgba(39, 174, 96, .05) 26%, transparent 27%, transparent 74%, rgba(39, 174, 96, .05) 75%, rgba(39, 174, 96, .05) 76%, transparent 77%, transparent),
+      linear-gradient(90deg, transparent 24%, rgba(39, 174, 96, .05) 25%, rgba(39, 174, 96, .05) 26%, transparent 27%, transparent 74%, rgba(39, 174, 96, .05) 75%, rgba(39, 174, 96, .05) 76%, transparent 77%, transparent);
+    background-size: 50px 50px;
+  }
+  
+  .carousel-testimonios {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .tarjetas-container {
+    display: flex;
+    gap: 0.5rem;
+    transition: transform 5s ease;
+  }
+  
+  .tarjeta-testimonio {
+    flex: 0 0 33%;
+    padding: 1rem;
+    background-color: var(--light-bg);
+    padding: 2rem;
+    border-radius: 10px;
+    text-align: center;
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: var(--shadow);
+  }
+  
+  
+  .servicios h2,
+  .ventajas h2,
+  .testimonios h2 {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 2.8rem;
+    margin-bottom: 3rem;
+    color: var(--secondary-color);
+    text-align: center;
+  }
+  
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+  }
+  
+  .modal.active {
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  .contenido-modal {
+    background: var(--white);
+    padding: 2rem;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+    position: relative;
+  }
+  
+  .modal.active .contenido-modal {
+    transform: scale(1);
+  }
+  
+  .tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem;
+  }
+  
+  .tab-button {
+    background: var(--light-bg);
+    border: none;
+    padding: 0.5rem 1rem;
+    margin: 0 0.5rem;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .tab-button.active {
+    background: var(--primary-color);
+    color: var(--white);
+  }
+  
+  .form-container {
+    margin-top: 1rem;
+  }
+  
+  .cerrar-modal {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--secondary-color);
+  }

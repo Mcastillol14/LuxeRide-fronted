@@ -1,18 +1,18 @@
 import { defineStore } from "pinia";
 import axios from "axios";
 
-export const datosStore = defineStore('registro', {
+export const datosStore = defineStore('login', {
   state: () => ({
     usuario: null,
     cargando: false,
     error: null,
   }),
   actions: {
-    async registrarUsuario(usuario) {
+    async loginUsuario(usuario) {
       this.cargando = true;
       this.error = null;
       try {
-        const respuesta = await axios.post('http://localhost:8080/api/users/register', usuario, {
+        const respuesta = await axios.post('http://localhost:8080/api/users/login', usuario, {
           headers: {
             'Content-Type': 'application/json',
           },

@@ -12,6 +12,7 @@
   "dependencies": {
     "@vee-validate/rules": "^4.15.0",
     "@vee-validate/yup": "^4.15.0",
+    "aos": "^2.3.4",
     "axios": "^1.7.9",
     "fronted": "file:",
     "pinia": "^2.3.0",
