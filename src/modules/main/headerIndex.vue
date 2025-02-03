@@ -1,78 +1,42 @@
 <template>
-  <header>
-    <nav>
-      <div class="logo">
-        <h2>LuxeRide</h2>
-
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3">
+    <div class="container d-flex align-items-center">
+      <a class="navbar-brand d-flex align-items-center" href="#">
+        <span class="fs-4 fs-sm-3 fs-xs-2">LuxeRide</span>
+      </a>
+      <button
+          class="navbar-toggler ms-auto"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav ms-4">
+          <li class="nav-item">
+            <a class="nav-link fs-5 fs-sm-4 fs-xs-3" href="#">Inicio</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link fs-5 fs-sm-4 fs-xs-3" href="#servicio">Servicio</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link fs-5 fs-sm-4 fs-xs-3" href="#ventajas">Ventajas</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link fs-5 fs-sm-4 fs-xs-3" href="#testimonios">Testimonios</a>
+          </li>
+        </ul>
       </div>
-      <div class="menu">
-        <a href="#servicios">Servicios</a>
-        <a href="#ventajas">Ventajas</a>
-        <a href="#testimonios">Testimonios</a>
       </div>
-      <div class="oculto">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
-    </nav>
-  </header>
+  </nav>
 </template>
 
-<script setup></script>
+<script setup>
+</script>
 
 <style scoped>
-header {
-  background-color: var(--white);
-  box-shadow: var(--shadow);
-  position: fixed;
-  width: 100%;
-  top: 0;
-  z-index: 1000;
-}
 
-nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 5%;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-}
-
-.logo img {
-  max-height: 50px;
-  width: auto;
-  margin-left: 10px;
-}
-
-.menu a {
-  color: var(--secondary-color);
-  text-decoration: none;
-  margin-left: 2rem;
-  transition: color 0.3s ease;
-}
-
-.menu a:hover {
-  color: var(--primary-color);
-}
-
-.oculto {
-  display: none;
-  flex-direction: column;
-  cursor: pointer;
-}
-
-.oculto span {
-  width: 25px;
-  height: 3px;
-  background-color: var(--secondary-color);
-  margin: 2px 0;
-  transition: 0.3s;
-}
 </style>

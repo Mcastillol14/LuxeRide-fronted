@@ -3,7 +3,6 @@
 </template>
 
 <script setup>
-import './assets/global/root.css';
 </script>
 
 <style scoped>

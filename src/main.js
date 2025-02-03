@@ -1,3 +1,6 @@
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap';
+import 'bootstrap-icons/font/bootstrap-icons.css';
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 
@@ -5,6 +8,8 @@ import App from './App.vue'
 import router from './router'
 import AOS from 'aos'
 import 'aos/dist/aos.css'
+
+
 
 // Crear la instancia de la aplicación Vue
 const app = createApp(App)

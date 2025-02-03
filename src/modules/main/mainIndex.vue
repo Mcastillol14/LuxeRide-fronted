@@ -1,220 +1,292 @@
 <template>
-  <main>
-    <section id="inicio" class="hero">
-      <div class="contenido-hero">
-        <h1>Viaja con estilo y responsabilidad</h1>
-        <p>Servicio de transporte premium, diseñado para tu comodidad y comprometido con un futuro más sostenible. Viaja seguro mientras cuidamos el planeta juntos.</p>
-        <button class="acceder-boton" @click="abrirModal">Acceder</button>
-      </div>
-      <div class="imagen-hero">
-        <svg width="500" height="300" viewBox="0 0 500 300">
-          <g transform="translate(50, 50)">
-            <rect x="50" y="80" width="40" height="120" fill="#2C3E50" />
-            <rect x="100" y="40" width="50" height="160" fill="#34495E" />
-            <rect x="160" y="100" width="45" height="100" fill="#2C3E50" />
-            <rect x="215" y="60" width="55" height="140" fill="#34495E" />
-            <rect x="280" y="90" width="40" height="110" fill="#2C3E50" />
-            <circle cx="70" cy="70" r="15" fill="#27AE60" />
-            <circle cx="180" cy="90" r="20" fill="#27AE60" />
-            <circle cx="300" cy="80" r="18" fill="#27AE60" />
-            <rect x="120" y="35" width="30" height="5" fill="#27AE60" />
-            <rect x="235" y="55" width="25" height="5" fill="#27AE60" />
-            <path d="M50 150 Q170 100 300 150" stroke="#27AE60" stroke-width="2" fill="none" />
-            <path d="M50 160 Q170 110 300 160" stroke="#27AE60" stroke-width="2" fill="none" />
-            <rect x="80" y="170" width="30" height="15" rx="5" fill="#27AE60" />
-            <rect x="200" y="180" width="30" height="15" rx="5" fill="#27AE60" />
-            <path d="M260 70 Q270 60 280 70 T300 70" fill="none" stroke="#27AE60" stroke-width="2" />
-            <path d="M265 75 Q275 65 285 75 T305 75" fill="none" stroke="#27AE60" stroke-width="2" />
-          </g>
-        </svg>
-      </div>
-    </section>
-    <section class="servicios" id="servicios">
-      <h2>Nuestras caracteristicas</h2>
-      <div class="servicios-grid">
-        <div class="tarjeta-servicio" data-aos="fade-right">
-          <svg class="service-icon" width="50" height="50" viewBox="0 0 50 50">
-            <circle cx="25" cy="25" r="20" fill="#27AE60" />
-            <path d="M15 20 L23 30 L35 15" stroke="white" stroke-width="3" fill="none" />
-          </svg>
-          <h3>Puntualidad</h3>
-          <p>Compromiso con el tiempo y horarios de nuestros clientes</p>
-        </div>
-        <div class="tarjeta-servicio" data-aos="fade-up">
-          <svg class="service-icon" width="50" height="50" viewBox="0 0 50 50">
-            <circle cx="25" cy="25" r="20" fill="#27AE60" />
-            <path d="M25 15 L25 35 M15 25 L35 25" stroke="white" stroke-width="3" />
-          </svg>
-          <h3>Atención Personalizada</h3>
-          <p>Servicio adaptado a las necesidades específicas de cada cliente</p>
-        </div>
-        <div class="tarjeta-servicio" data-aos="fade-up">
-          <svg class="service-icon" width="50" height="50" viewBox="0 0 50 50">
-            <circle cx="25" cy="25" r="20" fill="#27AE60" />
-            <path d="M17 25 C20 15, 30 15, 33 25" stroke="white" stroke-width="3" fill="none" />
-            <circle cx="25" cy="22" r="3" fill="white" />
-          </svg>
-          <h3>Confort Superior</h3>
-          <p>Flota de vehículos de alta gama para máxima comodidad</p>
-        </div>
-        <div class="tarjeta-servicio" data-aos="fade-left">
-          <svg class="service-icon" width="50" height="50" viewBox="0 0 50 50">
-            <circle cx="25" cy="25" r="20" fill="#27AE60" />
-            <path d="M20 15 L30 25 L20 35" stroke="white" stroke-width="3" fill="none" />
-          </svg>
-          <h3>Innovación Constante</h3>
-          <p>Tecnología de vanguardia en todos nuestros servicios</p>
-        </div>
-      </div>
-
-    </section>
-    <section id="ventajas" class="ventajas">
-      <h2>¿Por qué elegirnos?</h2>
-      <div class="ventajas-grid">
-        <div class="tarjeta-ventajas" data-aos="fade-zoom-in">
-          <h3>Sostenibilidad</h3>
-          <p>Reducimos la huella de carbono con nuestra flota eléctrica</p>
-        </div>
-        <div class="tarjeta-ventajas" data-aos="fade-zoom-in">
-          <h3>Confort Premium</h3>
-          <p>Vehículos de alta gama para tu comodidad</p>
-        </div>
-        <div class="tarjeta-ventajas" data-aos="fade-zoom-in">
-          <h3>Conductores Profesionales</h3>
-          <p>Personal capacitado y con experiencia</p>
-        </div>
-        <div class="tarjeta-ventajas" data-aos="fade-zoom-in">
-          <h3>Atención 24/7</h3>
-          <p>Disponibilidad total para cuando nos necesites</p>
-        </div>
-      </div>
-    </section>
-    <section id="testimonios" class="testimonios">
-      <h2>Lo que dicen nuestros clientes</h2>
-      <div class="carousel-testimonios">
-        <div class="tarjetas-container" :style="{ transform: `translateX(-${currentSlide * 100}%)` }">
-          <div v-for="(testimonio, index) in testimonios" :key="index" class="tarjeta-testimonio">
-            <svg class="foto-testimonio" width="60" height="60" viewBox="0 0 60 60">
-              <circle cx="30" cy="30" r="25" fill="#27AE60" />
-              <circle cx="30" cy="20" r="10" fill="#2C3E50" />
-              <path d="M20 45 Q30 55 40 45" fill="#2C3E50" />
-              <path :d="testimonio.foto" fill="#2C3E50" />
-            </svg>
-            <h3>{{ testimonio.nombre }}</h3>
-            <p>"{{ testimonio.opinion }}"</p>
+  <main class="main-content">
+    <section class="hero bg-image text-white py-8 py-md-10 py-lg-12">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-lg-8 mx-auto text-center" data-aos="fade-up">
+            <h1 class="display-3 fw-bold mb-4">Bienvenido a LuxeRide</h1>
+            <p class="lead mb-5 fs-4">
+              LuxeRide revoluciona el transporte urbano combinando lujo, sostenibilidad y tecnología de vanguardia.
+              Nuestra flota de taxis eléctricos de alta gama ofrece una experiencia de viaje inigualable,
+              reduciendo la huella de carbono sin comprometer el confort y la elegancia.
+            </p>
+            <button @click="openModal('login')" class="btn btn-primary btn-lg">Acceder</button>
           </div>
         </div>
       </div>
     </section>
+    <section id="experiencia" class="experiencia py-5">
+      <div class="container">
+        <h2 class="text-center mb-5 fw-bold" data-aos="fade-up">La Experiencia LuxeRide</h2>
+        <div class="row g-4">
+          <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="100">
+            <div class="feature-card text-center">
+              <i class="bi bi-lightning-charge display-4 text-primary mb-3"></i>
+              <h3 class="h5 mb-3">Viajes Eléctricos</h3>
+              <p>Disfruta de un viaje silencioso y ecológico en nuestra flota 100% eléctrica.</p>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="200">
+            <div class="feature-card text-center">
+              <i class="bi bi-star display-4 text-primary mb-3"></i>
+              <h3 class="h5 mb-3">Lujo Personalizado</h3>
+              <p>Experimenta un servicio a medida que se adapta a tus preferencias personales.</p>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="300">
+            <div class="feature-card text-center">
+              <i class="bi bi-shield-check display-4 text-primary mb-3"></i>
+              <h3 class="h5 mb-3">Seguridad Primero</h3>
+              <p>Viaja con tranquilidad gracias a nuestros rigurosos protocolos de seguridad.</p>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="400">
+            <div class="feature-card text-center">
+              <i class="bi bi-clock-history display-4 text-primary mb-3"></i>
+              <h3 class="h5 mb-3">Puntualidad Garantizada</h3>
+              <p>Optimizamos cada ruta para asegurar que llegues a tiempo a tu destino.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section id="ventajas" class="advantages py-5 bg-light">
+      <div class="container">
+        <h2 class="text-center mb-5 fw-bold" data-aos="fade-up">Nuestras Ventajas</h2>
+        <div class="row g-4">
+          <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="100">
+            <div class="card h-100 border-0 shadow-sm">
+              <img src="https://images.unsplash.com/photo-1593941707882-a5bba14938c7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1172&q=80" class="card-img-top" alt="Flota 100% Eléctrica">
+              <div class="card-body">
+                <h3 class="card-title h5 mb-3">Flota 100% Eléctrica</h3>
+                <p class="card-text">Viaja con estilo y responsabilidad ambiental.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="200">
+            <div class="card h-100 border-0 shadow-sm">
+              <img src="https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" class="card-img-top" alt="Conductores Profesionales">
+              <div class="card-body">
+                <h3 class="card-title h5 mb-3">Conductores Profesionales</h3>
+                <p class="card-text">Expertos en servicio al cliente y conducción segura.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="300">
+            <div class="card h-100 border-0 shadow-sm">
+              <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" class="card-img-top" alt="Tecnología de Vanguardia">
+              <div class="card-body">
+                <h3 class="card-title h5 mb-3">Tecnología de Vanguardia</h3>
+                <p class="card-text">Vehículos equipados con lo último en tecnología.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="400">
+            <div class="card h-100 border-0 shadow-sm">
+              <img src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1080&q=80" class="card-img-top" alt="Confort Premium">
+              <div class="card-body">
+                <h3 class="card-title h5 mb-3">Confort Premium</h3>
+                <p class="card-text">Interiores de lujo para una experiencia superior.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section id="testimonios" class="testimonials py-5">
+      <div class="container">
+        <h2 class="text-center mb-5 fw-bold" data-aos="fade-up">Lo que dicen nuestros clientes</h2>
+        <div class="row">
+          <div class="col-lg-8 mx-auto">
+            <carousel :items-to-show="1" :wrap-around="true" :autoplay="5000" class="testimonial-carousel">
+              <slide v-for="testimonial in testimonials" :key="testimonial.id">
+                <div class="testimonial-item text-center p-4">
+                  <i :class="testimonial.icon + ' display-1 mb-3 text-primary'"></i>
+                  <p class="testimonial-text mb-3">"{{ testimonial.text }}"</p>
+                  <h4 class="testimonial-name h6 mb-1">{{ testimonial.name }}</h4>
+                  <p class="testimonial-position text-muted small">{{ testimonial.position }}</p>
+                </div>
+              </slide>
+            </carousel>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="slogan bg-primary text-white py-5">
+      <div class="container text-center">
+        <h2 class="mb-4 fw-bold" data-aos="fade-up">No viajes. Teletranspórtate con estilo.</h2>
+        <p class="lead mb-4" data-aos="fade-up" data-aos-delay="100">LuxeRide: Donde el futuro del transporte se encuentra con el presente del lujo.</p>
+        <button @click="openModal('register')" class="btn btn-light btn-lg" data-aos="fade-up" data-aos-delay="200">Únete a la revolución del transporte</button>
+      </div>
+    </section>
+    <Transition name="modal">
+      <div v-if="showModal" class="modal-backdrop" @click="closeModal">
+        <div class="modal-content" @click.stop>
+          <div class="modal-header">
+            <h5 class="modal-title">{{ isLogin ? 'Iniciar sesión' : 'Registrarse' }}</h5>
+          </div>
+          <div class="modal-body">
+            <loginUser v-if="isLogin" />
+            <registerUser v-else />
+          </div>
+          <div class="modal-footer">
+            <button @click="toggleAuthMode" class="btn btn-link">
+              {{ isLogin ? '¿No tienes cuenta? Regístrate' : '¿Ya tienes cuenta? Inicia sesión' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </Transition>
   </main>
-
-  <div :class="['modal', { 'active': modalAbierto }]" @click.self="cerrarModal">
-    <div class="contenido-modal">
-      <button @click="cerrarModal" class="cerrar-modal">&times;</button>
-      <div class="tabs">
-        <button
-          class="tab-button"
-          :class="{ active: opcion === 'iniciar' }"
-          @click="cambiarOpcion('iniciar')"
-        >
-          Iniciar sesión
-        </button>
-        <button
-          class="tab-button"
-          :class="{ active: opcion === 'registro' }"
-          @click="cambiarOpcion('registro')"
-        >
-          Registro
-        </button>
-      </div>
-      <div v-if="opcion === 'iniciar'" class="form-container">
-        <loginUser />
-      </div>
-      <div v-if="opcion === 'registro'" class="form-container">
-        <registerUser />
-      </div>
-    </div>
-  </div>
 </template>
 
-
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted } from 'vue';
+import { Carousel, Slide } from 'vue3-carousel';
+import 'vue3-carousel/dist/carousel.css';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 import loginUser from './loginUser.vue';
 import registerUser from './registerUser.vue';
 
-const testimonios = [
-  {
-    nombre: "Juan Perez",
-    opinion: "Excelente servicio, muy puntuales y atentos",
-    foto: "M10 45 Q30 60 50 45"
-  },
-  {
-    nombre: "Maria Lopez",
-    opinion: "Me encanta la comodidad de sus vehículos y la atención personalizada de sus conductores",
-    foto: "M10 45 Q30 60 50 45"
-  },
-  {
-    nombre: "Pedro Ramirez",
-    opinion: "Siempre que necesito un taxi, llamo a LuxeRide, son los mejores",
-    foto: "M10 45 Q30 60 50 45"
-  },
-  {
-    nombre: "Ana Martinez",
-    opinion: "Me siento segura y cómoda cuando viajo con LuxeRide, son mi primera opción",
-    foto: "M10 45 Q30 60 50 45"
-  },
-  {
-    nombre: "Carlos Rodriguez",
-    opinion: "Excelente servicio, muy puntuales y atentos",
-    foto: "M10 45 Q30 60 50 45"
-  },
-  {
-    nombre: "Sofia Garcia",
-    opinion: "Me encanta su compromiso con le medio ambiente",
-    foto: "M10 45 Q30 60 50 45"
-  }
-];
+const showModal = ref(false);
+const isLogin = ref(true);
 
-const opcion = ref("iniciar");
-const modalAbierto = ref(false);
-const abrirModal = () => {
-  modalAbierto.value = true;
-};
-const cerrarModal = () => {
-  modalAbierto.value = false;
+const openModal = (mode) => {
+  isLogin.value = mode === 'login';
+  showModal.value = true;
 };
 
-const cambiarOpcion = (nuevaOpcion) => {
-  opcion.value = nuevaOpcion;
-};
-const indiceTestimonio = ref(0);
-const testimoniosPorPagina = 3;
-const tiempoCambio = ref(null);
-
-const currentSlide = computed(() => Math.floor(indiceTestimonio.value / testimoniosPorPagina));
-
-const cambioTestimonio = () => {
-  indiceTestimonio.value = (indiceTestimonio.value + 1) % testimonios.length;
+const closeModal = () => {
+  showModal.value = false;
 };
 
-const iniciarCambio = () => {
-  tiempoCambio.value = setInterval(cambioTestimonio, 5000);
+const toggleAuthMode = () => {
+  isLogin.value = !isLogin.value;
 };
+
+const testimonials = ref([
+  { id: 1, name: 'Ana García', position: 'Ejecutiva de Marketing', text: 'LuxeRide ha elevado mis expectativas sobre el transporte de lujo. Impecable en cada detalle.', icon: 'bi bi-person-circle' },
+  { id: 2, name: 'Carlos Rodríguez', position: 'Empresario', text: 'La combinación perfecta de lujo y responsabilidad ambiental. LuxeRide es el futuro del transporte VIP.', icon: 'bi bi-person-circle' },
+  { id: 3, name: 'Laura Martínez', position: 'Influencer de Viajes', text: 'Viajar con LuxeRide es una experiencia en sí misma. Comodidad, estilo y servicio excepcional.', icon: 'bi bi-person-circle' },
+  { id: 4, name: 'Javier López', position: 'Director Financiero', text: 'La eficiencia y profesionalidad de LuxeRide hacen que sea mi primera opción para traslados al aeropuerto.', icon: 'bi bi-person-circle' },
+  { id: 5, name: 'María Sánchez', position: 'Organizadora de Eventos', text: 'LuxeRide elevó el nivel de nuestros eventos corporativos. Un servicio impecable.', icon: 'bi bi-person-circle' },
+  { id: 6, name: 'Pedro Alonso', position: 'Arquitecto', text: 'Viajar en los vehículos de LuxeRide es como moverse en una obra de arte sobre ruedas.', icon: 'bi bi-person-circle' },
+  { id: 7, name: 'Isabel Navarro', position: 'Abogada', text: 'La discreción y el lujo de LuxeRide son perfectos para mis necesidades profesionales.', icon: 'bi bi-person-circle' },
+  { id: 8, name: 'Roberto Fernández', position: 'Chef Reconocido', text: 'LuxeRide entiende el verdadero significado del servicio premium. Una experiencia culinaria sobre ruedas.', icon: 'bi bi-person-circle' },
+  { id: 9, name: 'Elena Gómez', position: 'Gerente de Sostenibilidad', text: 'Como profesional en sostenibilidad, aprecio enormemente el enfoque eco-friendly de LuxeRide.', icon: 'bi bi-person-circle' },
+  { id: 10, name: 'Diego Herrera', position: 'Atleta Profesional', text: 'LuxeRide combina perfectamente el confort que necesito antes de mis competiciones con la responsabilidad ambiental.', icon: 'bi bi-person-circle' },
+]);
 
 onMounted(() => {
-  iniciarCambio();
+  AOS.init({
+    duration: 1000,
+    once: true,
+  });
 });
-
-onUnmounted(() => {
-  if (tiempoCambio.value) {
-    clearInterval(tiempoCambio.value);
-  }
-});
-
 </script>
 
-<style scoped src="../../assets/style/mainIndex.css">
+<style scoped>
+.main-content {
+  background-color: #ffffff;
+}
 
+.bg-image {
+  background-image: url('https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80');
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.bg-image::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.hero .container {
+  position: relative;
+  z-index: 1;
+}
+
+.card {
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.testimonial-carousel {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.testimonial-item {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1050;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 400px;
+}
+
+.modal-enter-active,
+.modal-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.modal-enter-from,
+.modal-leave-to {
+  opacity: 0;
+}
+
+@media (max-width: 768px) {
+  .hero h1 {
+    font-size: 3rem;
+  }
+  .hero .lead {
+    font-size: 1.25rem;
+  }
+}
+
+.feature-card {
+  padding: 2rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.flota .card img {
+  height: 200px;
+  object-fit: cover;
+}
 </style>
 

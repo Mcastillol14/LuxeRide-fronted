@@ -1,7 +1,8 @@
 <template>
-    <headerIndex />
-    <mainIndex />
-    <footerIndex />
+  <headerIndex />
+  <mainIndex/>
+  <footerIndex />
+
 
 
 </template>
@@ -12,7 +13,7 @@ import headerIndex from '../modules/main/headerIndex.vue'
 import mainIndex from '../modules/main/mainIndex.vue'
 import footerIndex from '../modules/main/footerIndex.vue'
 
+
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

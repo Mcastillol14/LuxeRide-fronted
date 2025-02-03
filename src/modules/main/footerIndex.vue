@@ -1,29 +1,54 @@
 <template>
- <footer>
-    <div class="contenido-footer">
-        <p>&copy; {{ yearActual }} <strong>LuxeRide</strong> · Todos los derechos reservados.</p>
-    </div>
-</footer>
+  <footer class="bg-dark text-white py-5">
+    <div class="container">
+      <div class="row mb-4">
+        <div class="col-md-3">
+          <h5 class="text-uppercase">Enlaces rápidos</h5>
+          <ul class="list-unstyled">
+            <li><a href="#" class="text-white">Inicio</a></li>
+            <li><a href="#servicios" class="text-white">Servicios</a></li>
+            <li><a href="#ventajas" class="text-white">Ventajas</a></li>
+          </ul>
+        </div>
+        <div class="col-md-3">
+          <h5 class="text-uppercase">Sobre nosotros</h5>
+          <ul class="list-unstyled">
+            <li><a href="#" class="text-white">Quiénes somos</a></li>
+            <li><a href="#" class="text-white">Misión</a></li>
+            <li><a href="#" class="text-white">Visión</a></li>
+          </ul>
+        </div>
+      </div>
 
+      <div class="row">
+        <div class="col-12 text-center">
+          <p>&copy; {{ currentYear }} LuxeRide. Todos los derechos reservados.</p>
+        </div>
+      </div>
+    </div>
+  </footer>
 </template>
 
 <script setup>
-const yearActual = new Date().getFullYear();
+import { ref, onMounted } from 'vue';
+
+const currentYear = ref('');
+
+onMounted(() => {
+  currentYear.value = new Date().getFullYear();
+});
 </script>
 
 <style scoped>
 footer {
-  background-color: var(--secondary-color);
-  color: var(--white);
-  padding: 3rem 5%;
+  background-color: #343a40;
 }
-.contenido-footer{
-  max-width: 1200px;
-  margin: 0 auto;
+
+footer a:hover {
+  text-decoration: underline;
 }
-.contenido-footer p{
-  margin: 0;
-  font-size: 0.9rem;
-  text-align: center;
+
+footer .bi {
+  font-size: 1.5rem;
 }
 </style>
