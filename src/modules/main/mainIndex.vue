@@ -10,7 +10,7 @@
               Nuestra flota de taxis eléctricos de alta gama ofrece una experiencia de viaje inigualable,
               reduciendo la huella de carbono sin comprometer el confort y la elegancia.
             </p>
-            <button @click="openModal('login')" class="btn btn-primary btn-lg">Acceder</button>
+            <button @click="openModal('login')" class="btn btn-primary btn-lg mb-3">Acceder</button>
           </div>
         </div>
       </div>

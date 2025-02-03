@@ -1,17 +1,14 @@
-import { defineStore } from "pinia";
 import axios from "axios";
 import { useLoginStore } from "../loginAdmin";
+import { defineStore } from "pinia";
 
-export const useListadoUsuariosStore = defineStore("listadoUsuarios", {
+export const useDesactivarCuentaStore = defineStore("desactivarCuenta", {
   state: () => ({
-    usuarios: [],
-    cargando: false,
     error: null,
-    totalPages: 0,
-    currentPage: 0,
+    cargando: false,
   }),
   actions: {
-    async obtenerListadoUsuarios(page = 0, rol = "", dni = "") {
+    async desactivarCuenta(dni) {
       this.cargando = true;
       this.error = null;
 
@@ -26,26 +23,19 @@ export const useListadoUsuariosStore = defineStore("listadoUsuarios", {
       }
 
       try {
-        const respuesta = await axios.get("http://localhost:8080/api/admin/allUsuarios", {
+        const response = await axios.put("http://localhost:8080/api/admin/desactivarCuenta", { dni }, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
-          },
-          params: {
-            page,
-            rol,
-            dni,
-          },
+          }
         });
-        this.usuarios = respuesta.data.content;
-        this.totalPages = respuesta.data.totalPages;
-        this.currentPage = respuesta.data.number;
+        console.log("Cuenta desactivada correctamente:", response.data);
       } catch (error) {
         this.error = error.response?.data?.message || error.message;
-        console.error("Error al obtener usuarios:", this.error);
+        console.error("Error al desactivar cuenta:", this.error);
       } finally {
         this.cargando = false;
       }
-    },
-  },
+    }
+  }
 });

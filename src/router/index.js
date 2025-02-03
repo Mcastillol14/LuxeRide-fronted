@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router';
 import { obtenerRoles, estaAutenticado } from '../modules/jwt/controlToken.js';
 
 const router = createRouter({
@@ -18,34 +18,32 @@ const router = createRouter({
     {
       path: '/admin',
       name: 'Admin',
-      component: () => import('@/views/adminWeb.vue'),
-      meta: { requiereAuth: true, roles: ['ROLE_ROL_ADMIN'] }
+      component: () => import('@/views/adminLogin.vue'),
     },
     {
-      path:'/admin/dashboard',
-      name:'Dashboard',
-      component:()=>import('@/views/adminDashboard.vue'),
+      path: '/admin/dashboard',
+      name: 'Dashboard',
+      component: () => import('@/views/adminDashboard.vue'),
       meta: { requiereAuth: true, roles: ['ROLE_ROL_ADMIN'] }
-    },
+    }
   ],
-})
+});
 
-// Guardia de navegación global
 router.beforeEach((to, from, next) => {
   if (to.meta.requiereAuth) {
     if (!estaAutenticado()) {
-      next({ name: 'Index' })
+      next({ name: 'Admin' });
     } else {
       const roles = obtenerRoles();
       if (to.meta.roles.some(role => roles.includes(role))) {
         next();
       } else {
-        next({ name: 'Index' }) // O a una página de acceso denegado
+        next({ name: 'Index' });
       }
     }
   } else {
-    next()
+    next();
   }
-})
+});
 
-export default router
+export default router;

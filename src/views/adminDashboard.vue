@@ -1,16 +1,9 @@
 <template>
-<div class="dashboard">
-  
-  <div class="contenido">
-    <div>
-
-    </div>
-  </div>
-</div>
+  <usuarioDashboard/>
 </template>
 
 <script setup>
-
+import usuarioDashboard from '@/modules/admin/usuarioDashboard.vue';
 </script>
 
 <style scoped>

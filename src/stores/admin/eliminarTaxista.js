@@ -1,17 +1,14 @@
-import { defineStore } from "pinia";
 import axios from "axios";
 import { useLoginStore } from "../loginAdmin";
+import { defineStore } from "pinia";
 
-export const useListadoUsuariosStore = defineStore("listadoUsuarios", {
+export const useEliminarTaxistaStore = defineStore("eliminarTaxista", {
   state: () => ({
-    usuarios: [],
-    cargando: false,
     error: null,
-    totalPages: 0,
-    currentPage: 0,
+    cargando: false,
   }),
   actions: {
-    async obtenerListadoUsuarios(page = 0, rol = "", dni = "") {
+    async eliminarTaxista(usuario) {
       this.cargando = true;
       this.error = null;
 
@@ -26,26 +23,19 @@ export const useListadoUsuariosStore = defineStore("listadoUsuarios", {
       }
 
       try {
-        const respuesta = await axios.get("http://localhost:8080/api/admin/allUsuarios", {
+        const response = await axios.put("http://localhost:8080/api/admin/eliminarTaxista", usuario, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
-          },
-          params: {
-            page,
-            rol,
-            dni,
-          },
+          }
         });
-        this.usuarios = respuesta.data.content;
-        this.totalPages = respuesta.data.totalPages;
-        this.currentPage = respuesta.data.number;
+        console.log("Usuario eliminado de taxista:", response.data);
       } catch (error) {
         this.error = error.response?.data?.message || error.message;
-        console.error("Error al obtener usuarios:", this.error);
+        console.error("Error al eliminar taxista:", this.error);
       } finally {
         this.cargando = false;
       }
-    },
-  },
+    }
+  }
 });

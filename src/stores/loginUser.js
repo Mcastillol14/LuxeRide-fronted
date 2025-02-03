@@ -6,6 +6,7 @@ export const datosStore = defineStore('login', {
     usuario: null,
     cargando: false,
     error: null,
+    token: null
   }),
   actions: {
     async loginUsuario(usuario) {
@@ -18,7 +19,7 @@ export const datosStore = defineStore('login', {
           },
         });
         this.usuario = respuesta.data;
-        this.token=respuesta.data.token;
+        this.token = respuesta.data.token;
         return respuesta;
       } catch (error) {
         this.error = error.response ? error.response.data : error.message;
