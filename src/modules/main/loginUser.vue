@@ -1,9 +1,14 @@
 <template>
   <div class="container py-5">
     <h1 class="text-center mb-4">Iniciar Sesión</h1>
-    <Form @submit="enviarFormulario" v-slot="{ errors }" class="formulario">
 
+    <div v-if="storeLogin.mensaje" class="alert alert-danger" role="alert">
+      {{ storeLogin.mensaje }}
+    </div>
+
+    <Form @submit="enviarFormulario" v-slot="{ errors }" class="formulario">
       <div class="mb-3">
+        <label for="email" class="form-label">Correo electrónico</label>
         <Field
           id="email"
           name="email"
@@ -13,11 +18,13 @@
           :rules="'required|email'"
           :class="{ 'is-invalid': errors.email }"
           class="form-control"
+          aria-describedby="emailHelp"
         />
         <loginError name="email" class="invalid-feedback" />
       </div>
 
       <div class="mb-3">
+        <label for="passwordLogin" class="form-label">Contraseña</label>
         <Field
           id="passwordLogin"
           name="passwordLogin"
@@ -27,59 +34,47 @@
           :rules="'required'"
           :class="{ 'is-invalid': errors.passwordLogin }"
           class="form-control"
+          aria-describedby="passwordHelp"
         />
         <loginError name="passwordLogin" class="invalid-feedback" />
       </div>
 
-      <button
-        type="submit"
-        :disabled="Object.keys(errors).length > 0 || storeLogin.cargando"
-        class="btn btn-primary w-100"
-      >
-        {{ storeLogin.cargando ? 'Iniciando sesión...' : 'Iniciar Sesión' }}
-      </button>
+      <button type="submit" class="btn btn-primary w-100">Iniciar sesión</button>
     </Form>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
-import { useRouter } from 'vue-router';
 import { defineRule, Field, Form } from 'vee-validate';
-import { datosStore } from '@/stores/loginUser.js';
 import { email } from '@vee-validate/rules';
-import loginError from '../error/loginError.vue';
+import { datosStore } from '@/stores/loginUser';
+import router from '@/router';
 
 const storeLogin = datosStore();
-const router = useRouter();
-
-defineRule('required', (value) => {
-  return value?.trim() ? true : 'Este campo es obligatorio';
-});
-defineRule('email', email);
-
 const datosFormulario = ref({
   email: '',
-  passwordLogin: '',
+  passwordLogin: ''
 });
+
+defineRule('required', (value) => value?.trim() ? true : 'Este campo es obligatorio');
+defineRule('email', email);
 
 const enviarFormulario = async (values, { resetForm }) => {
   try {
-    const usuario = {
-      email: values.email,
-      password: values.passwordLogin,
-    };
+    storeLogin.mensaje = '';
+    const usuario = { email: values.email, password: values.passwordLogin };
     await storeLogin.loginUsuario(usuario);
-
     if (!storeLogin.error) {
       resetForm();
-      router.push('/home');
       localStorage.setItem('token', storeLogin.token);
+      router.push('/home');
     } else {
-      console.error('Error al iniciar sesión:', storeLogin.error);
+      storeLogin.mensaje = storeLogin.error;
     }
   } catch (error) {
-    console.error('Ocurrió un error inesperado:', error);
+    console.error('Error durante el inicio de sesión:', error);
+    storeLogin.mensaje = error.message || 'Ha ocurrido un error. Por favor, inténtelo de nuevo.';
   }
 };
 </script>
@@ -90,11 +85,15 @@ const enviarFormulario = async (values, { resetForm }) => {
   margin: 0 auto;
 }
 
-.alert {
-  text-align: center;
+.is-invalid {
+  border-color: #dc3545;
 }
 
 .invalid-feedback {
   display: block;
+}
+
+.alert {
+  margin-bottom: 20px;
 }
 </style>

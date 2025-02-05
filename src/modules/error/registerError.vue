@@ -5,7 +5,7 @@
 <script setup>
 import { computed } from 'vue';
 import { useField } from 'vee-validate';
-import { datosStore } from '@/stores/registerUser.js'
+import { datosStore } from '@/stores/registerUser.js';
 
 const store = datosStore();
 const props = defineProps({
@@ -18,6 +18,7 @@ const props = defineProps({
 const { errorMessage } = useField(props.name);
 
 const mensajeErrorPersonalizado = {
+  required: 'Este campo es obligatorio',
   email: 'Por favor, introduce un correo electrónico válido',
   min: 'Este campo debe tener al menos 8 caracteres',
   dni: 'El DNI introducido no es válido',
@@ -28,26 +29,18 @@ const mensajeErrorPersonalizado = {
 const mostrarMensajeError = computed(() => {
   if (store.error) {
     if (props.name === 'dni' && store.error.toLowerCase().includes('dni')) {
-      return store.error;
+      return mensajeErrorPersonalizado.dni;
     }
-    if (props.name === 'email' && store.error.toLowerCase().includes('correo')) {
-      return store.error;
-    }
+    return store.error;
   }
-  if (!errorMessage.value) {
-    return '';
-  }
-
-  const errorKey = errorMessage.value.toLowerCase();
-  return mensajeErrorPersonalizado[errorKey] || errorMessage.value;
+  return errorMessage.value ? mensajeErrorPersonalizado[errorMessage.value] || errorMessage.value : '';
 });
 </script>
 
 <style scoped>
 .error {
   color: red;
-  font-size: 0.8rem;
-  display: block;
+  font-size: 0.875rem;
   margin-top: 0.25rem;
 }
 </style>

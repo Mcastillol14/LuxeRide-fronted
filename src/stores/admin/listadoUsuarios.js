@@ -9,6 +9,8 @@ export const useListadoUsuariosStore = defineStore("listadoUsuarios", {
     error: null,
     totalPages: 0,
     currentPage: 0,
+    pageSize: 10,
+    totalElements: 0,
   }),
   actions: {
     async obtenerListadoUsuarios(page = 0, rol = "", dni = "") {
@@ -33,6 +35,7 @@ export const useListadoUsuariosStore = defineStore("listadoUsuarios", {
           },
           params: {
             page,
+            size: this.pageSize,
             rol,
             dni,
           },

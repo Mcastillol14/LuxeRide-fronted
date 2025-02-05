@@ -8,12 +8,30 @@
       <Form @submit="enviarFormulario" v-slot="{ errors }">
         <div class="mb-3">
           <label for="email" class="form-label">Correo electrónico</label>
-          <Field id="email" name="email" type="email" class="form-control" v-model="datosFormulario.email" :rules="'required|email'" :class="{'is-invalid': errors.email}" />
+          <Field
+            id="email"
+            name="email"
+            type="email"
+            class="form-control"
+            v-model="datosFormulario.email"
+            :rules="'required|email'"
+            :class="{'is-invalid': errors.email}"
+            aria-describedby="emailHelp"
+          />
           <div v-if="errors.email" class="invalid-feedback">{{ errors.email }}</div>
         </div>
         <div class="mb-3">
           <label for="passwordLogin" class="form-label">Contraseña</label>
-          <Field id="passwordLogin" name="passwordLogin" type="password" class="form-control" v-model="datosFormulario.passwordLogin" :rules="'required'" :class="{'is-invalid': errors.passwordLogin}" />
+          <Field
+            id="passwordLogin"
+            name="passwordLogin"
+            type="password"
+            class="form-control"
+            v-model="datosFormulario.passwordLogin"
+            :rules="'required'"
+            :class="{'is-invalid': errors.passwordLogin}"
+            aria-describedby="passwordHelp"
+          />
           <div v-if="errors.passwordLogin" class="invalid-feedback">{{ errors.passwordLogin }}</div>
         </div>
         <button type="submit" class="btn btn-primary w-100">Iniciar sesión</button>
@@ -51,11 +69,10 @@ const enviarFormulario = async (values, { resetForm }) => {
       console.log("Token recibido:", store.token);
       localStorage.setItem('token', store.token);
 
-      // Log antes de la redirección
       console.log("Redirigiendo a /admin/dashboard");
 
       nextTick(() => {
-        router.replace('/admin/dashboard');
+        router.push('/admin/dashboard');
       });
     } else {
       errorMessage.value = store.error;
@@ -65,8 +82,6 @@ const enviarFormulario = async (values, { resetForm }) => {
     errorMessage.value = error.message || 'Ha ocurrido un error. Por favor, inténtelo de nuevo.';
   }
 };
-
-
 </script>
 
 <style scoped>

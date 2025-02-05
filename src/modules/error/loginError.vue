@@ -16,16 +16,19 @@ const props = defineProps({
 const { errorMessage } = useField(props.name);
 
 const mensajeErrorPersonalizado = {
-
+  'Este campo es obligatorio': 'Por favor, complete este campo.',
+  'El campo debe ser un correo electrónico válido': 'Por favor, ingrese un correo electrónico válido.'
 };
 
 const mostrarMensajeError = computed(() => {
-  if (!errorMessage.value) {
-    return '';
-  }
-  return mensajeErrorPersonalizado[errorMessage.value] || errorMessage.value;
+  return errorMessage.value ? mensajeErrorPersonalizado[errorMessage.value] || errorMessage.value : '';
 });
-
 </script>
 
-<style scoped></style>
+<style scoped>
+.error {
+  color: red;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+</style>
