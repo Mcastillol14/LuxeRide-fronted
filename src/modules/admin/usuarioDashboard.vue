@@ -81,6 +81,8 @@
         Siguiente
       </button>
     </div>
+
+    <!-- Modal de Edición -->
     <div v-if="modalVisible" class="modal-overlay" @click.self="cerrarModal">
       <div class="modal-container">
         <div class="modal-header">
@@ -99,12 +101,14 @@
             </div>
             <div class="mb-3">
               <label for="dni" class="form-label">DNI</label>
-              <input type="text" id="dni" v-model="usuarioEdit.dni" class="form-control" required />
+              <input type="text" id="dni" v-model="usuarioEdit.dni" :class="{ 'is-invalid': dniError }"
+                class="form-control" required @input="clearDniError" />
               <div v-if="dniError" class="text-danger">{{ dniError }}</div>
             </div>
             <div class="mb-3">
               <label for="email" class="form-label">Correo Electrónico</label>
-              <input type="email" id="email" v-model="usuarioEdit.email" class="form-control" required />
+              <input type="email" id="email" v-model="usuarioEdit.email" :class="{ 'is-invalid': emailError }"
+                class="form-control" required @input="clearEmailError" />
               <div v-if="emailError" class="text-danger">{{ emailError }}</div>
             </div>
 
@@ -151,6 +155,14 @@ const cerrarModal = () => {
   emailError.value = "";
 };
 
+const clearDniError = () => {
+  dniError.value = "";
+};
+
+const clearEmailError = () => {
+  emailError.value = "";
+};
+
 const submitForm = async () => {
   const dniRegex = /^\d{8}[A-Za-z]$/;
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -166,6 +178,13 @@ const submitForm = async () => {
   }
 
   await editarUsuarioStore.editarCuenta(usuarioEdit.value.id, usuarioEdit.value);
+
+  if (editarUsuarioStore.error) {
+    dniError.value = editarUsuarioStore.error;
+    emailError.value = editarUsuarioStore.error;
+    return;
+  }
+
   await refrescarTabla();
   cerrarModal();
 };
@@ -250,5 +269,10 @@ onMounted(async () => {
 
 .estado-col {
   width: 100px;
+
+}
+
+.is-invalid {
+  border-color: #dc3545;
 }
 </style>

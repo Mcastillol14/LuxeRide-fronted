@@ -65,7 +65,6 @@
       <div class="modal-container">
         <div class="modal-header">
           <h5 class="modal-title">Añadir Nueva Licencia</h5>
-          <button type="button" class="btn-close" @click="cerrarModal"></button>
         </div>
         <div class="modal-body">
           <form @submit.prevent="registrarNuevaLicencia">
