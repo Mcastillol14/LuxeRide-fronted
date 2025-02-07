@@ -1,15 +1,11 @@
 <template>
-  <usuarioDashboard />
-  <licenciasDashboard />
-  <serviciosDashboard />
 
+<mainDashboard/>
 
 </template>
 
 <script setup>
-import usuarioDashboard from '@/modules/admin/usuarioDashboard.vue';
-import licenciasDashboard from '@/modules/admin/licenciasDashboard.vue';
-import serviciosDashboard from '@/modules/admin/serviciosDashboard.vue';
+import mainDashboard from '@/modules/admin/mainDashboard.vue';
 </script>
 
 <style scoped></style>
