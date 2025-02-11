@@ -26,9 +26,6 @@
           <li class="nav-item">
             <a class="nav-link fs-5" href="#testimonios" aria-label="Testimonios">Testimonios</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link fs-5" href="#contacto" aria-label="Contacto">Contacto</a>
-          </li>
         </ul>
       </div>
     </div>

@@ -15,7 +15,7 @@ export const datosStore = defineStore('login', {
       this.error = null;
       this.mensaje = null;
       try {
-        const respuesta = await axios.post('http://localhost:8080/api/usuarios/iniciar', usuario, {
+        const respuesta = await axios.post('https://luxeride-backend.onrender.com/api/usuarios/iniciar', usuario, {
           headers: {
             'Content-Type': 'application/json',
           },

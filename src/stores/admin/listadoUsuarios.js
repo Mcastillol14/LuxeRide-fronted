@@ -28,7 +28,7 @@ export const useListadoUsuariosStore = defineStore("listadoUsuarios", {
       }
 
       try {
-        const respuesta = await axios.get("http://localhost:8080/api/admin/allUsuarios", {
+        const respuesta = await axios.get("https://luxeride-backend.onrender.com/api/admin/allUsuarios", {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,

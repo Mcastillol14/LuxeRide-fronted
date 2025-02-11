@@ -25,7 +25,7 @@ export const useRegistrarServicioStore = defineStore("registrarServicio", {
         throw new Error("Token no disponible")
       }
       try {
-        await axios.post("http://localhost:8080/api/admin/registrarServicio", servicio, {
+        await axios.post("https://luxeride-backend.onrender.com/api/admin/registrarServicio", servicio, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,

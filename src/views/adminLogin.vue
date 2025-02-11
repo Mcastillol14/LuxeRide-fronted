@@ -1,7 +1,6 @@
 <template>
-  
+
     <loginAdmin/>
-    <router-view></router-view>
 
 </template>
 

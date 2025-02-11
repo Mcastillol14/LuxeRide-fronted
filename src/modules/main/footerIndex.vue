@@ -18,14 +18,6 @@
             <li><a href="#" class="text-white" aria-label="Visión">Visión</a></li>
           </ul>
         </div>
-        <div class="col-md-3">
-          <h5 class="text-uppercase">Síguenos</h5>
-          <ul class="list-unstyled">
-            <li><a href="#" class="text-white" aria-label="Facebook"><i class="fab fa-facebook-f"></i> Facebook</a></li>
-            <li><a href="#" class="text-white" aria-label="Twitter"><i class="fab fa-twitter"></i> Twitter</a></li>
-            <li><a href="#" class="text-white" aria-label="Instagram"><i class="fab fa-instagram"></i> Instagram</a></li>
-          </ul>
-        </div>
       </div>
 
       <div class="row">

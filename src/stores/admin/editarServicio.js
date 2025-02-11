@@ -22,7 +22,7 @@ export const useEditarServicioStore = defineStore("editarServicio", {
       }
       try {
         const response = await axios.put(
-          `http://localhost:8080/api/admin/editarServicio/${id}`,
+          `https://luxeride-backend.onrender.com/api/admin/editarServicio/${id}`,
           datosServicio,
           {
             headers: {

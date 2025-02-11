@@ -63,7 +63,7 @@ const getIcon = (id) => {
 <style scoped>
 .sidebar {
   box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
-  z-index: 100;
+
 }
 
 @media (max-width: 767.98px) {

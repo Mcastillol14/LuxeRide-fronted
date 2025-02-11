@@ -13,8 +13,7 @@ export const useDesactivarLicenciaStore = defineStore("desactivarLicencia", {
       }
 
       try {
-        await axios.put(
-          `http://localhost:8080/api/admin/desactivarLicencia/${id}`,
+        await axios.put(`https://luxeride-backend.onrender.com/api/admin/desactivarLicencia/${id}`,
           {},
           {
             headers: {

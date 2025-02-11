@@ -13,8 +13,7 @@ export const useDesactivarServicioStore = defineStore("desactivarServicio", {
       }
 
       try {
-        await axios.put(
-          `http://localhost:8080/api/admin/desactivarServicio/${id}`,
+        await axios.put(`https://luxeride-backend.onrender.com/api/admin/desactivarServicio/${id}`,
           {},
           {
             headers: {

@@ -23,7 +23,7 @@ export const useActivarCuentaStore = defineStore("activarCuenta", {
       }
 
       try {
-        const response = await axios.put("http://localhost:8080/api/admin/activarCuenta", { dni }, {
+        const response = await axios.put("https://luxeride-backend.onrender.com/api/admin/activarCuenta", { dni }, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,

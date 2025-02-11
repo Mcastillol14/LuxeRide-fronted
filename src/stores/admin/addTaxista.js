@@ -23,7 +23,7 @@ export const useAddTaxistaStore = defineStore("añadirTaxista", {
       }
 
       try {
-        const response = await axios.put("http://localhost:8080/api/admin/addTaxista", usuario, {
+        const response = await axios.put("https://luxeride-backend.onrender.com/api/admin/addTaxista", usuario, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,

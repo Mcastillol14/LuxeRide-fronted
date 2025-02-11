@@ -23,7 +23,7 @@ export const useDesactivarCuentaStore = defineStore("desactivarCuenta", {
       }
 
       try {
-        const response = await axios.put("http://localhost:8080/api/admin/desactivarCuenta", { dni }, {
+        const response = await axios.put("https://luxeride-backend.onrender.com/api/admin/desactivarCuenta", { dni }, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,

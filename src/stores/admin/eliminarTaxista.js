@@ -23,7 +23,7 @@ export const useEliminarTaxistaStore = defineStore("eliminarTaxista", {
       }
 
       try {
-        const response = await axios.put("http://localhost:8080/api/admin/eliminarTaxista", usuario, {
+        const response = await axios.put("https://luxeride-backend.onrender.com/api/admin/eliminarTaxista", usuario, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,

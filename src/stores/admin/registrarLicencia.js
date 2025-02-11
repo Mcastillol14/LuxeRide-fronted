@@ -23,7 +23,7 @@ export const useRegistrarLicenciaStore = defineStore("registrarLicencia", {
       }
 
       try {
-        await axios.post("http://localhost:8080/api/admin/registrarLicencia", licencia, {
+        await axios.post("https://luxeride-backend.onrender.com/api/admin/registrarLicencia", licencia, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,

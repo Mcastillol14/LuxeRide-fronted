@@ -12,7 +12,7 @@ export const datosStore = defineStore('registro', {
       this.cargando = true;
       this.error = null;
       try {
-        const respuesta = await axios.post('http://localhost:8080/api/usuarios/registrar', usuario, {
+        const respuesta = await axios.post('https://luxeride-backend.onrender.com/api/usuarios/registrar', usuario, {
           headers: {
             'Content-Type': 'application/json',
           },

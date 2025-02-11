@@ -28,7 +28,7 @@ export const useListadoLicenciasStore = defineStore("listadoLicencias", {
       }
 
       try {
-        const respuesta = await axios.get("http://localhost:8080/api/admin/allLicencias", {
+        const respuesta = await axios.get("https://luxeride-backend.onrender.com/api/admin/allLicencias", {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
