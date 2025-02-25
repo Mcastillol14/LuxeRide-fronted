@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import axios from "axios";
 
-export const datosStore = defineStore('login', {
+export const useLoginUsuarioStore = defineStore('datos', {
   state: () => ({
     usuario: null,
     cargando: false,
@@ -15,7 +15,7 @@ export const datosStore = defineStore('login', {
       this.error = null;
       this.mensaje = null;
       try {
-        const respuesta = await axios.post('https://luxeride-backend.onrender.com/api/usuarios/iniciar', usuario, {
+        const respuesta = await axios.post('http://localhost:8080/api/usuarios/iniciar', usuario, {
           headers: {
             'Content-Type': 'application/json',
           },
@@ -23,17 +23,14 @@ export const datosStore = defineStore('login', {
 
         this.usuario = respuesta.data;
         this.token = respuesta.data.token;
-        return respuesta;
+        localStorage.setItem('token', this.token)
+        return respuesta.data;
       } catch (error) {
-        if (error.response && error.response.status === 500) {
-          this.mensaje = "Tu cuenta está desactivada. Contacta con el soporte.";
-        } else {
-          this.error = error.response ? error.response.data.error : error.message;
-        }
-        throw error;
+        this.error = error.response?.data || error.message;
+        throw error
       } finally {
         this.cargando = false;
       }
-    }
-  }
+    },
+  },
 });

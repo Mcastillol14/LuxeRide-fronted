@@ -7,7 +7,7 @@
             <h1 class="display-3 fw-bold mb-4">Bienvenido a LuxeRide</h1>
             <p class="lead mb-5 fs-4">
               LuxeRide revoluciona el transporte urbano combinando lujo, sostenibilidad y tecnología de vanguardia.
-              Nuestra flota de taxis eléctricos de alta gama ofrece una experiencia de viaje inigualable,
+              Nuestra línea de taxis eléctricos de alta gama ofrece una experiencia de viaje inigualable,
               reduciendo la huella de carbono sin comprometer el confort y la elegancia.
             </p>
             <button @click="openModal('login')" class="btn btn-primary btn-lg mb-3">Acceder</button>
@@ -23,7 +23,7 @@
             <div class="feature-card text-center">
               <i class="bi bi-lightning-charge display-4 text-primary mb-3"></i>
               <h3 class="h5 mb-3">Viajes Eléctricos</h3>
-              <p>Disfruta de un viaje silencioso y ecológico en nuestra flota 100% eléctrica.</p>
+              <p>Disfruta de un viaje silencioso y ecológico en nuestra línea 100% eléctrica.</p>
             </div>
           </div>
           <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="200">
@@ -56,16 +56,20 @@
         <div class="row g-4">
           <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="100">
             <div class="card h-100 border-0 shadow-sm">
-              <img src="https://images.unsplash.com/photo-1593941707882-a5bba14938c7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1172&q=80" class="card-img-top" alt="Flota 100% Eléctrica">
+              <img
+                src="https://images.unsplash.com/photo-1593941707882-a5bba14938c7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1172&q=80"
+                class="card-img-top" alt="línea 100% Eléctrica">
               <div class="card-body">
-                <h3 class="card-title h5 mb-3">Flota 100% Eléctrica</h3>
+                <h3 class="card-title h5 mb-3">Línea 100% Eléctrica</h3>
                 <p class="card-text">Viaja con estilo y responsabilidad ambiental.</p>
               </div>
             </div>
           </div>
           <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="200">
             <div class="card h-100 border-0 shadow-sm">
-              <img src="https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" class="card-img-top" alt="Conductores Profesionales">
+              <img
+                src="https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
+                class="card-img-top" alt="Conductores Profesionales">
               <div class="card-body">
                 <h3 class="card-title h5 mb-3">Conductores Profesionales</h3>
                 <p class="card-text">Expertos en servicio al cliente y conducción segura.</p>
@@ -74,7 +78,9 @@
           </div>
           <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="300">
             <div class="card h-100 border-0 shadow-sm">
-              <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" class="card-img-top" alt="Tecnología de Vanguardia">
+              <img
+                src="https://images.unsplash.com/photo-1610647752706-3bb12232b3ab?q=80&w=1925&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                class="card-img-top" alt="Tecnología de Vanguardia">
               <div class="card-body">
                 <h3 class="card-title h5 mb-3">Tecnología de Vanguardia</h3>
                 <p class="card-text">Vehículos equipados con lo último en tecnología.</p>
@@ -83,7 +89,9 @@
           </div>
           <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="400">
             <div class="card h-100 border-0 shadow-sm">
-              <img src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1080&q=80" class="card-img-top" alt="Confort Premium">
+              <img
+                src="https://images.unsplash.com/photo-1584907797015-7554cd315667?q=80&w=1776&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D  "
+                class="card-img-top" alt="Confort Premium">
               <div class="card-body">
                 <h3 class="card-title h5 mb-3">Confort Premium</h3>
                 <p class="card-text">Interiores de lujo para una experiencia superior.</p>
@@ -115,8 +123,10 @@
     <section class="slogan bg-primary text-white py-5">
       <div class="container text-center">
         <h2 class="mb-4 fw-bold" data-aos="fade-up">No viajes. Teletranspórtate con estilo.</h2>
-        <p class="lead mb-4" data-aos="fade-up" data-aos-delay="100">LuxeRide: Donde el futuro del transporte se encuentra con el presente del lujo.</p>
-        <button @click="openModal('register')" class="btn btn-light btn-lg" data-aos="fade-up" data-aos-delay="200">Únete a la revolución del transporte</button>
+        <p class="lead mb-4" data-aos="fade-up" data-aos-delay="100">LuxeRide: Donde el futuro del transporte se
+          encuentra con el presente del lujo.</p>
+        <button @click="openModal('register')" class="btn btn-light btn-lg" data-aos="fade-up"
+          data-aos-delay="200">Únete a la revolución del transporte</button>
       </div>
     </section>
     <Transition name="modal">
@@ -219,7 +229,7 @@ onMounted(() => {
 
 .card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
 .testimonial-carousel {
@@ -267,6 +277,7 @@ onMounted(() => {
   .hero h1 {
     font-size: 3rem;
   }
+
   .hero .lead {
     font-size: 1.25rem;
   }
@@ -281,12 +292,11 @@ onMounted(() => {
 
 .feature-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
-.flota .card img {
+.línea .card img {
   height: 200px;
   object-fit: cover;
 }
 </style>
-

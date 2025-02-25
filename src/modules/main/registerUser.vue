@@ -1,8 +1,7 @@
 <template>
   <div class="container py-5">
     <h1 class="text-center mb-4">Registro</h1>
-    <Form @submit="enviarFormulario" v-slot="{ errors }" class="formulario">
-
+    <Form @submit="enviarFormulario" v-slot="{ errors, isSubmitting }" class="formulario">
       <div class="mb-3">
         <Field id="name" placeholder="Nombre" name="name" type="text"
           v-model="datosFormulario.name"
@@ -25,24 +24,26 @@
         <Field id="dni" name="dni" placeholder="DNI" type="text"
           v-model="datosFormulario.dni"
           :rules="'required|dni'"
-          :class="{ 'is-invalid': errors.dni || (store.error && store.error.toLowerCase().includes('dni')) }"
+          :class="{ 'is-invalid': errors.dni || serverErrors.dni }"
           class="form-control" />
         <ErrorMessage name="dni" class="invalid-feedback" />
+        <div v-if="serverErrors.dni" class="invalid-feedback">{{ serverErrors.dni }}</div>
       </div>
 
       <div class="mb-3">
         <Field id="email" name="email" placeholder="Correo electrónico" type="email"
           v-model="datosFormulario.email"
           :rules="'required|email'"
-          :class="{ 'is-invalid': errors.email || (store.error && store.error.toLowerCase().includes('correo')) }"
+          :class="{ 'is-invalid': errors.email || serverErrors.email }"
           class="form-control" />
         <ErrorMessage name="email" class="invalid-feedback" />
+        <div v-if="serverErrors.email" class="invalid-feedback">{{ serverErrors.email }}</div>
       </div>
 
       <div class="mb-3">
         <Field id="password" name="password" placeholder="Contraseña" type="password"
           v-model="datosFormulario.password"
-          :rules="'required|min:8'"
+          :rules="'required|passwordMin'"
           :class="{ 'is-invalid': errors.password }"
           class="form-control" />
         <ErrorMessage name="password" class="invalid-feedback" />
@@ -68,30 +69,43 @@
         <ErrorMessage name="aceptoTerminos" class="invalid-feedback" />
       </div>
 
-      <button type="submit" :disabled="Object.keys(errors).length > 0 || store.cargando" class="btn btn-primary w-100">
-        {{ store.cargando ? 'Enviando...' : 'Enviar' }}
+      <button
+        type="submit"
+        :disabled="Object.keys(errors).length > 0 || isSubmitting"
+        class="btn btn-primary w-100"
+      >
+        {{ isSubmitting ? 'Enviando...' : 'Enviar' }}
       </button>
     </Form>
 
     <div v-if="mensajeExito" class="alert alert-success mt-3">
       {{ mensajeExito }}
     </div>
+    <div v-if="mensajeError" class="alert alert-danger mt-3">
+      {{ mensajeError }}
+    </div>
   </div>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue';
-import { Field, Form } from 'vee-validate';
-import { email, min } from '@vee-validate/rules';
+import { Field, Form, ErrorMessage } from 'vee-validate';
+import { email } from '@vee-validate/rules';
 import { defineRule } from 'vee-validate';
-import { datosStore } from '../../stores/registerUser';
-import ErrorMessage from '../error/registerError.vue';
+import { useRegistroUsuarioStore } from '../../stores/registerUser';
 
-const store = datosStore();
+const store = useRegistroUsuarioStore();
 
 defineRule('required', (value) => {
   if (!value || value.trim() === '') {
-    return 'Este campo es obligatorio';
+    return 'Campo obligatorio';
+  }
+  return true;
+});
+
+defineRule('passwordMin', (value) => {
+  if (!value || value.length < 8) {
+    return 'La contraseña debe tener al menos 8 caracteres';
   }
   return true;
 });
@@ -103,8 +117,12 @@ defineRule('requiredCheckbox', (value) => {
   return true;
 });
 
-defineRule('email', email);
-defineRule('min', min);
+defineRule('email', (value) => {
+  if (!email(value)) {
+    return 'Correo electrónico no válido';
+  }
+  return true;
+});
 
 defineRule('dni', (value) => {
   const patronDni = /^[0-9]{8}[A-Za-z]$/;
@@ -140,16 +158,24 @@ const datosFormulario = ref({
 });
 
 const mensajeExito = ref('');
+const mensajeError = ref('');
+const serverErrors = ref({
+  dni: '',
+  email: ''
+});
 
-const enviarFormulario = async (values, { resetForm }) => {
+const enviarFormulario = async (values, { resetForm, setSubmitting }) => {
   try {
     mensajeExito.value = '';
+    mensajeError.value = '';
+    serverErrors.value = { dni: '', email: '' };
+
     const usuario = {
-      nombre: datosFormulario.value.name,
-      apellidos: datosFormulario.value.lastName,
-      dni: datosFormulario.value.dni,
-      email: datosFormulario.value.email,
-      password: datosFormulario.value.password,
+      nombre: values.name,
+      apellidos: values.lastName,
+      dni: values.dni,
+      email: values.email,
+      password: values.password,
     };
 
     await store.registrarUsuario(usuario);
@@ -157,9 +183,48 @@ const enviarFormulario = async (values, { resetForm }) => {
     if (!store.error) {
       mensajeExito.value = 'Registrado correctamente';
       resetForm();
+    } else {
+      handleServerError(store.error);
     }
   } catch (error) {
     console.error('Error en el componente:', error);
+    handleServerError(error);
+  } finally {
+    setSubmitting(false);
+  }
+};
+
+const handleServerError = (error) => {
+  console.log('Error recibido:', error);
+
+  if (error && error.response && error.response.data) {
+    const errorData = error.response.data;
+    console.log('Datos del error:', errorData);
+
+    if (typeof errorData === 'string') {
+      if (errorData === 'El DNI y el correo ya existen') {
+        serverErrors.value.dni = 'Este DNI ya está registrado';
+        serverErrors.value.email = 'Este correo electrónico ya está registrado';
+      } else if (errorData.toLowerCase().includes('dni')) {
+        serverErrors.value.dni = 'Este DNI ya está registrado';
+      } else if (errorData.toLowerCase().includes('correo')) {
+        serverErrors.value.email = 'Este correo electrónico ya está registrado';
+      } else {
+        mensajeError.value = errorData;
+      }
+    } else if (typeof errorData === 'object') {
+      if (errorData.dni) {
+        serverErrors.value.dni = errorData.dni;
+      }
+      if (errorData.email) {
+        serverErrors.value.email = errorData.email;
+      }
+      if (!serverErrors.value.dni && !serverErrors.value.email) {
+        mensajeError.value = 'Error en el registro. Por favor, revise los datos e intente nuevamente.';
+      }
+    }
+  } else {
+    mensajeError.value = 'Ocurrió un error al procesar la solicitud. Por favor, inténtelo de nuevo.';
   }
 };
 </script>
@@ -178,3 +243,4 @@ const enviarFormulario = async (values, { resetForm }) => {
   display: block;
 }
 </style>
+

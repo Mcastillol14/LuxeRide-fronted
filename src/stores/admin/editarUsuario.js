@@ -1,6 +1,6 @@
 import axios from "axios";
 import { defineStore } from "pinia";
-import { useLoginStore } from "../loginAdmin";
+import { useLoginAdminStore } from "../loginAdmin";
 
 export const useEditarUsuarioStore = defineStore("editarUsuario", {
   state: () => ({
@@ -13,7 +13,7 @@ export const useEditarUsuarioStore = defineStore("editarUsuario", {
       this.cargando = true;
       this.error = null;
 
-      const loginStore = useLoginStore();
+      const loginStore = useLoginAdminStore();
       const token = loginStore.token;
 
       if (!token) {
@@ -24,16 +24,20 @@ export const useEditarUsuarioStore = defineStore("editarUsuario", {
       }
 
       try {
-        const response = await axios.put(
-          `https://luxeride-backend.onrender.com/api/admin/editarUsuario/${id}`,
-          datosUsuario,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }
+        const response = await axios.put(`http://localhost:8080/api/admin/editarUsuario/${id}`, null, {
+          params: {
+            nombre: datosUsuario.nombre,
+            apellidos: datosUsuario.apellidos,
+            dni: datosUsuario.dni,
+            email: datosUsuario.email,
+          },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
         );
+
         console.log("Usuario editado correctamente:", response.data);
       } catch (error) {
         if (error.response?.data?.message) {

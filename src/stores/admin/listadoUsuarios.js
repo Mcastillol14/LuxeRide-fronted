@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import axios from "axios";
-import { useLoginStore } from "../loginAdmin";
+import { useLoginAdminStore } from "../loginAdmin";
+import debounce from "lodash/debounce";
 
 export const useListadoUsuariosStore = defineStore("listadoUsuarios", {
   state: () => ({
@@ -13,11 +14,11 @@ export const useListadoUsuariosStore = defineStore("listadoUsuarios", {
     totalElements: 0,
   }),
   actions: {
-    async obtenerListadoUsuarios(page = 0, rol = "", dni = "") {
+    async obtenerListadoUsuarios(page = 0, dni = "") {
       this.cargando = true;
       this.error = null;
 
-      const loginStore = useLoginStore();
+      const loginStore = useLoginAdminStore();
       const token = loginStore.token;
 
       if (!token) {
@@ -28,7 +29,7 @@ export const useListadoUsuariosStore = defineStore("listadoUsuarios", {
       }
 
       try {
-        const respuesta = await axios.get("https://luxeride-backend.onrender.com/api/admin/allUsuarios", {
+        const response = await axios.get("http://localhost:8080/api/admin/allUsuarios", {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -36,13 +37,12 @@ export const useListadoUsuariosStore = defineStore("listadoUsuarios", {
           params: {
             page,
             size: this.pageSize,
-            rol,
             dni,
           },
         });
-        this.usuarios = respuesta.data.content;
-        this.totalPages = respuesta.data.totalPages;
-        this.currentPage = respuesta.data.number;
+        this.usuarios = response.data.content
+        this.totalPages = response.data.totalPages
+        this.currentPage = response.data.number
       } catch (error) {
         this.error = error.response?.data?.message || error.message;
         console.error("Error al obtener usuarios:", this.error);
@@ -50,5 +50,10 @@ export const useListadoUsuariosStore = defineStore("listadoUsuarios", {
         this.cargando = false;
       }
     },
+
+    // Usamos debounce para controlar las solicitudes de búsqueda
+    filtrarUsuarios:debounce(async function (dni) {
+      await this.obtenerListadoUsuarios(0, dni);
+    }, 100),
   },
 });

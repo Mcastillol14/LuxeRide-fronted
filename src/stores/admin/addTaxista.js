@@ -1,18 +1,18 @@
 import axios from "axios";
-import { useLoginStore } from "../loginAdmin";
+import { useLoginAdminStore } from "../loginAdmin";
 import { defineStore } from "pinia";
 
-export const useAddTaxistaStore = defineStore("añadirTaxista", {
+export const useAddTaxistaStore = defineStore("addTaxista", {
   state: () => ({
     error: null,
     cargando: false,
   }),
   actions: {
-    async añadirTaxista(usuario) {
+    async addTaxista(id) {  // Cambié el nombre de la función aquí
       this.cargando = true;
       this.error = null;
 
-      const loginStore = useLoginStore();
+      const loginStore = useLoginAdminStore();
       const token = loginStore.token;
 
       if (!token) {
@@ -23,7 +23,7 @@ export const useAddTaxistaStore = defineStore("añadirTaxista", {
       }
 
       try {
-        const response = await axios.put("https://luxeride-backend.onrender.com/api/admin/addTaxista", usuario, {
+        const response = await axios.put(`http://localhost:8080/api/admin/addTaxista/${id}`, null, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,

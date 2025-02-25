@@ -1,18 +1,18 @@
 import axios from "axios";
-import { useLoginStore } from "../loginAdmin";
+import { useLoginAdminStore } from "../loginAdmin";
 import { defineStore } from "pinia";
 
-export const useActivarCuentaStore = defineStore("activarCuenta", {
+export const useDeleteTaxistaStore = defineStore("deleteTaxista", {
   state: () => ({
     error: null,
     cargando: false,
   }),
   actions: {
-    async activarCuenta(dni) {
+    async deleteTaxista(id) {
       this.cargando = true;
       this.error = null;
 
-      const loginStore = useLoginStore();
+      const loginStore = useLoginAdminStore();
       const token = loginStore.token;
 
       if (!token) {
@@ -23,16 +23,17 @@ export const useActivarCuentaStore = defineStore("activarCuenta", {
       }
 
       try {
-        const response = await axios.put("https://luxeride-backend.onrender.com/api/admin/activarCuenta", { dni }, {
+        const response = await axios.put(`http://localhost:8080/api/admin/deleteTaxista/${id}`,null, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           }
         });
-        console.log("Cuenta activada correctamente:", response.data);
+
+        console.log("Usuario eliminado de taxista:", response.data);
       } catch (error) {
-        this.error = error.response?.data?.message || error.message;
-        console.error("Error al activar cuenta:", this.error);
+        this.error = error.response?.data?.message || "Error desconocido";
+        console.error("Error al eliminar taxista:", this.error);
       } finally {
         this.cargando = false;
       }

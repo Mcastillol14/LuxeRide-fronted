@@ -1,202 +1,231 @@
 <template>
   <section id="servicios" class="container my-5">
-    <h5 class="text-center mb-4">Servicios</h5>
     <div class="row mb-4">
       <div class="col-12 col-md-6 col-lg-4 mb-3">
-        <select v-model="estado" class="form-control" @change="filtrarServicios">
-          <option value="">Filtrar por estado</option>
-          <option value="true">Activo</option>
-          <option value="false">Desactivado</option>
-        </select>
+        <input v-model="tipo" type="text" class="form-control" placeholder="Filtrar por tipo"
+               @input="filtrarServicios"/>
       </div>
       <div class="col-12 col-md-6 col-lg-4 mb-3">
         <button @click="abrirModalNuevoServicio" class="btn btn-primary w-100">
-          Añadir Nuevo Servicio
+          <i class="bi bi-plus-circle"></i> Añadir Nuevo Servicio
         </button>
       </div>
     </div>
 
     <div class="table-responsive">
-      <table class="table table-striped table-hover table-bordered shadow-sm rounded">
+      <table class="table table-striped table-hover table-bordered shadow-sm rounded" style="table-layout: fixed;">
         <thead class="table-dark">
-          <tr>
-            <th>Id</th>
-            <th>Tipo</th>
-            <th>Descripción</th>
-            <th style="width: 150px;">Estado</th>
-            <th>Precio por kilómetro</th>
-            <th>Acciones</th>
-          </tr>
+        <tr>
+          <th>Id</th>
+          <th>Tipo</th>
+          <th>Descripción</th>
+          <th>Precio por kilómetro</th>
+          <th class="estado-col">Estado</th>
+          <th style="width: 140px;">Acciones</th>
+        </tr>
         </thead>
         <tbody>
-          <tr v-for="servicio in servicios" :key="servicio.id">
-            <td>{{ servicio.id }}</td>
-            <td>{{ servicio.tipo }}</td>
-            <td>{{ servicio.descripcion }}</td>
-            <td>
+        <tr v-for="servicio in servicios" :key="servicio.id">
+          <td>{{ servicio.id }}</td>
+          <td>{{ servicio.tipo }}</td>
+          <td>{{ servicio.descripcion }}</td>
+          <td>{{ servicio.precioPorKm }}€</td>
+          <td>
               <span :class="servicio.estado ? 'text-success' : 'text-danger'">
+                 <i :class="servicio.estado ? 'bi bi-check-circle' : 'bi bi-x-circle'"></i>
                 {{ servicio.estado ? 'Activo' : 'Desactivado' }}
               </span>
-            </td>
-            <td>{{ servicio.precioPorKm }}€</td>
-            <td>
-              <button
-                :class="['btn', 'btn-sm', 'rounded-pill', 'px-4', 'mb-2', servicio.estado ? 'btn-outline-danger' : 'btn-outline-success']"
-                @click="servicio.estado ? desactivarServicio(servicio.id) : activarServicio(servicio.id)">
-                {{ servicio.estado ? 'Desactivar' : 'Activar' }}
-              </button>
-              <button class="btn btn-outline-primary btn-sm rounded-pill px-4 mb-2" @click="editarServicio(servicio)">
-                Editar
-              </button>
-            </td>
-          </tr>
+          </td>
+          <td>
+            <button v-if="servicio.estado" class="btn-control btn btn-outline-warning btn-sm rounded-pill"
+                    @click="desactivarServicioMarcada(servicio.id)">
+              <i class="bi bi-lock"></i>
+            </button>
+            <button v-if="!servicio.estado" class="btn-control btn btn-outline-success btn sm rounded-pill"
+                    @click="activarServicioMarcada(servicio.id)">
+              <i class="bi bi-unlock"></i>
+            </button>
+            <button class="btn-control btn btn-outline-danger btn-sm rounded-pill"
+                    @click="deleteServicioMarcada(servicio.id)">
+              <i class="bi bi-trash"></i>
+            </button>
+          </td>
+        </tr>
         </tbody>
       </table>
     </div>
 
     <div class="pagination-container text-center mt-4">
       <button class="btn btn-outline-secondary mx-2" :disabled="listadoServiciosStore.currentPage === 0"
-        @click="cambiarPagina(listadoServiciosStore.currentPage - 1)">
+              @click="cambiarPagina(listadoServiciosStore.currentPage - 1)">
         Anterior
       </button>
       <span>Página {{ listadoServiciosStore.currentPage + 1 }} de {{ listadoServiciosStore.totalPages }}</span>
       <button class="btn btn-outline-secondary mx-2"
-        :disabled="listadoServiciosStore.currentPage === listadoServiciosStore.totalPages - 1"
-        @click="cambiarPagina(listadoServiciosStore.currentPage + 1)">
+              :disabled="listadoServiciosStore.currentPage === listadoServiciosStore.totalPages - 1"
+              @click="cambiarPagina(listadoServiciosStore.currentPage + 1)">
         Siguiente
       </button>
     </div>
   </section>
 
-  <!-- Modal para Nuevo/Editar Servicio -->
-  <div v-if="modalVisible" class="modal-overlay" @click.self="cerrarModal">
+  <!-- Modal para Nuevo Servicio -->
+  <div v-if="mostrarModal" class="modal-overlay">
     <div class="modal-container">
       <div class="modal-header">
-        <h5 class="modal-title">{{ modoEdicion ? 'Editar Servicio' : 'Añadir Nuevo Servicio' }}</h5>
-        <button type="button" class="btn-close" @click="cerrarModal" aria-label="Close"></button>
+        <h5>Añadir Servicio</h5>
+        <button class="btn-close" @click="cerrarModal">x</button>
       </div>
       <div class="modal-body">
-        <form @submit.prevent="submitForm">
+        <form @submit.prevent="registrarServicioNuevo">
           <div class="mb-3">
-            <label for="tipo" class="form-label">Tipo</label>
-            <input type="text" id="tipo" v-model="servicioEdit.tipo" class="form-control" required>
+            <label for="tipoServicio">Tipo</label>
+            <input
+              type="text"
+              class="form-control"
+              id="tipoServicio"
+              v-model="nuevoServicio.tipo"
+              required
+            >
           </div>
           <div class="mb-3">
-            <label for="descripcion" class="form-label">Descripción</label>
-            <input type="text" id="descripcion" v-model="servicioEdit.descripcion" class="form-control" required>
+            <label for="descripcionServicio">Descripción</label>
+            <input
+              type="text"
+              class="form-control"
+              id="descripcionServicio"
+              v-model="nuevoServicio.descripcion"
+              required
+            >
           </div>
           <div class="mb-3">
-            <label for="precioPorKm" class="form-label">Precio por kilómetro</label>
-            <input type="number" id="precioPorKm" v-model="servicioEdit.precioPorKm"
-              :class="{ 'is-invalid': precioKmError }" class="form-control" required step="any" min="0"
-              @input="clearPrecioKmError">
-            <div v-if="precioKmError" class="text-danger">{{ precioKmError }}</div>
+            <label for="precioServicio">Precio por kilómetro</label>
+            <input
+              type="number"
+              class="form-control"
+              id="precioServicio"
+              v-model="nuevoServicio.precioPorKm"
+              step="0.01"
+              min="0.01"
+              required
+            >
           </div>
-          <button type="submit" class="btn btn-primary">{{ modoEdicion ? 'Guardar Cambios' : 'Registrar Servicio'
-            }}</button>
+          <button type="submit" class="btn btn-primary">Registrar Servicio</button>
         </form>
+        <div v-if="mensaje" :class="['alert mt-2', mensajeTipo === 'success' ? 'alert-success' : 'alert-danger']"
+             role="alert">
+          {{ mensaje }}
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useListadoServiciosStore } from '@/stores/admin/listadoServicios';
-import { useRegistrarServicioStore } from '@/stores/admin/registrarServicio';
-import { useActivarServicioStore } from '@/stores/admin/activarServicio';
-import { useDesactivarServicioStore } from '@/stores/admin/desactivarServicio';
-import { useEditarServicioStore } from '@/stores/admin/editarServicio';
+import {ref, onMounted, computed} from 'vue';
+import {useListadoServiciosStore} from '@/stores/admin/listadoServicios';
+import {useAddServicioStore} from "@/stores/admin/addServicio.js";
+import {useDesactivarServicioStore} from "@/stores/admin/desactivarServicio.js";
+import {useActivarServicioStore} from "@/stores/admin/activarServicio.js";
+import {useDeleteServicioStore} from "@/stores/admin/deleteServicio.js";
+import debounce from "lodash/debounce";
 
 const listadoServiciosStore = useListadoServiciosStore();
-const registrarServicioStore = useRegistrarServicioStore();
+const addServicioStore = useAddServicioStore();
 const activarServicioStore = useActivarServicioStore();
 const desactivarServicioStore = useDesactivarServicioStore();
-const editarServicioStore = useEditarServicioStore();
+const deleteServicioStore = useDeleteServicioStore();
 
-const servicios = ref([]);
-const estado = ref("");
-const modalVisible = ref(false);
-const modoEdicion = ref(false);
-const servicioEdit = ref({
+const servicios = computed(() => listadoServiciosStore.servicios);
+const tipo = ref("");
+const nuevoServicio = ref({
   tipo: '',
   descripcion: '',
-  precioKm: 0,
+  precioPorKm: ''
 });
-const precioKmError = ref("");
+
+const mostrarModal = ref(false);
+const mensaje = ref('');
+const mensajeTipo = ref('');
+
+const filtrarServicios = debounce(async () => {
+  await listadoServiciosStore.obtenerListadoServicios(0, tipo.value);
+}, 500);
 
 onMounted(async () => {
-  await refrescarTabla();
+  await listadoServiciosStore.obtenerListadoServicios(0, "");
 });
-
-const refrescarTabla = async () => {
-  await listadoServiciosStore.obtenerListadoServicios();
-  servicios.value = listadoServiciosStore.servicios;
-};
 
 const cambiarPagina = async (pagina) => {
   if (pagina >= 0 && pagina < listadoServiciosStore.totalPages) {
-    await listadoServiciosStore.obtenerListadoServicios(pagina, estado.value);
-    servicios.value = listadoServiciosStore.servicios;
+    try {
+      await listadoServiciosStore.obtenerListadoServicios(pagina, tipo.value);
+    } catch (error) {
+      console.log(error);
+    }
   }
 };
 
-const filtrarServicios = async () => {
-  await listadoServiciosStore.obtenerListadoServicios(0, estado.value);
-  servicios.value = listadoServiciosStore.servicios;
+const abrirModalNuevoServicio = () => {
+  nuevoServicio.value = {tipo: '', descripcion: '', precioPorKm: ''};
+  mensaje.value = '';
+  mensajeTipo.value = '';
+  mostrarModal.value = true;
 };
 
-const activarServicio = async (id) => {
-  await activarServicioStore.activarServicio(id);
-  await refrescarTabla();
+const cerrarModal = () => {
+  mostrarModal.value = false;
+  nuevoServicio.value = {tipo: '', descripcion: '', precioPorKm: ''};
+  mensaje.value = '';
+  mensajeTipo.value = '';
 };
 
-const desactivarServicio = async (id) => {
+const refrescarTabla = async () => {
+  await listadoServiciosStore.obtenerListadoServicios(listadoServiciosStore.currentPage, tipo.value);
+};
+
+const registrarServicioNuevo = async () => {
+  try {
+    const servicioToAdd = {
+      ...nuevoServicio.value,
+      precioPorKm: parseFloat(nuevoServicio.value.precioPorKm).toFixed(2)
+    };
+
+    await addServicioStore.addServicio(servicioToAdd);
+    mensaje.value = 'Servicio registrado correctamente';
+    mensajeTipo.value = 'success';
+    await refrescarTabla();
+    nuevoServicio.value = {tipo: '', descripcion: '', precioPorKm: ''};
+    setTimeout(() => {
+      cerrarModal();
+    }, 1000);
+  } catch (error) {
+    console.error('Error al registrar servicio:', error);
+    if (error.response && error.response.status === 400) {
+      mensaje.value = error.response.data || 'Error al registrar nuevo servicio';
+    } else {
+      mensaje.value = 'Error al registrar nuevo servicio';
+    }
+    mensajeTipo.value = 'danger';
+  }
+};
+
+const desactivarServicioMarcada = async (id) => {
   await desactivarServicioStore.desactivarServicio(id);
   await refrescarTabla();
 };
 
-const abrirModalNuevoServicio = () => {
-  modoEdicion.value = false;
-  servicioEdit.value = { tipo: '', descripcion: '', precioPorKm: 0 };
-  modalVisible.value = true;
+const activarServicioMarcada = async (id) => {
+  await activarServicioStore.activarServicio(id);
+  await refrescarTabla();
 };
 
-const editarServicio = (servicio) => {
-  modoEdicion.value = true;
-  servicioEdit.value = { ...servicio };
-  modalVisible.value = true;
-};
-
-const cerrarModal = () => {
-  modalVisible.value = false;
-  precioKmError.value = "";
-};
-
-const clearPrecioKmError = () => {
-  precioKmError.value = "";
-};
-
-const submitForm = async () => {
-  const precioKmRegex = /^\d+(\.\d{1,2})?$/;
-  if (!precioKmRegex.test(servicioEdit.value.precioPorKm)) {
-    precioKmError.value = "El precio por kilómetro debe ser un número con hasta 2 decimales";
-    return;
-  }
-
-  try {
-    if (modoEdicion.value) {
-      await editarServicioStore.editarServicio(servicioEdit.value.id, servicioEdit.value);
-    } else {
-      await registrarServicioStore.registrarServicio(servicioEdit.value);
-    }
-    await refrescarTabla();
-    cerrarModal();
-  } catch (error) {
-    console.error('Error al procesar el servicio:', error);
-  }
+const deleteServicioMarcada = async (id) => {
+  await deleteServicioStore.deleteServicio(id);
+  await refrescarTabla();
 };
 </script>
+
 <style scoped>
 .modal-overlay {
   position: fixed;
@@ -233,9 +262,5 @@ const submitForm = async () => {
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
-}
-
-.is-invalid {
-  border-color: #dc3545;
 }
 </style>

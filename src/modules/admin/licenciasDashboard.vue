@@ -1,182 +1,188 @@
 <template>
   <section id="licencias" class="container my-5">
-    <h5 class="text-center mb-4">Licencias</h5>
     <div class="row mb-4">
-      <div class="col-12 col-md-6 col-lg-4 mb-3 mb-md-0">
-        <input v-model="numero" type="text" class="form-control" placeholder="Filtrar por número de licencia"
-          @input="filtrarLicencias" />
+      <div class="col-12 col-md-6 col-lg-4 mb-3">
+        <input v-model="numero" type="text" class="form-control" placeholder="Filtrar por número"
+               @input="filtrarLicencias"/>
       </div>
       <div class="col-12 col-lg-4">
         <button @click="abrirModalNuevaLicencia" class="btn btn-primary w-100">
-          Añadir Nueva Licencia
+          <i class="bi bi-plus-circle"></i> Añadir Nueva Licencia
         </button>
       </div>
     </div>
-
     <div class="table-responsive">
-      <table class="table table-striped table-hover table-bordered shadow-sm rounded">
+      <table class="table table-striped table-hover table-bordered shadow-sm rounded" style="table-layout: fixed;">
         <thead class="table-dark">
-          <tr>
-            <th>Id</th>
-            <th style="width: 150px;">Estado</th>
-            <th>Número de licencia</th>
-            <th>Coche al que pertenece</th>
-            <th>Acciones</th>
-          </tr>
+        <tr>
+          <th>Id</th>
+          <th>Numero</th>
+          <th class="estado-col">Estado</th>
+          <th style="width: 140px;">Acciones</th>
+        </tr>
         </thead>
         <tbody>
-  <tr v-for="licencia in licencias" :key="licencia.id">
-    <td>{{ licencia.id }}</td>
-    <td>
-      <span :class="licencia.estado ? 'text-success' : 'text-danger'">
-        {{ licencia.estado ? 'Activa' : 'Desactivada' }}
-      </span>
-    </td>
-    <td>{{ licencia.numero }}</td>
-    <td>
-      <span v-if="licencia.coche">{{ licencia.coche.matricula }}</span>
-      <span v-else>No asignado</span>
-    </td>
-    <td>
-      <button
-        :class="['btn', 'btn-sm', 'rounded-pill', 'px-4', 'mb-2', 'mb-sm-0', licencia.estado ? 'btn-outline-danger' : 'btn-outline-success']"
-        @click="licencia.estado ? desactivarLicencia(licencia.id) : activarLicencia(licencia.id)"
-        :aria-label="licencia.estado ? 'Desactivar licencia' : 'Activar licencia'"
-      >
-        {{ licencia.estado ? 'Desactivar' : 'Activar' }}
-      </button>
-    </td>
-  </tr>
-</tbody>
+        <tr v-for="licencia in licencias" :key="licencia.id">
+          <td>{{ licencia.id }}</td>
+          <td>{{ licencia.numero }}</td>
+          <td>
+              <span :class="licencia.estado ? 'text-success' : 'text-danger'">
+                <i :class="licencia.estado ? 'bi bi-check-circle' : 'bi bi-x-circle'"></i>
+                {{ licencia.estado ? 'Activa' : 'Desactivada' }}
+              </span>
+          </td>
+          <td>
+            <button class="btn-control btn btn-outline-primary btn-sm rounded-pill"
+                    @click="abrirModalEdicion(licencia)">
+              <i class="bi bi-pencil"></i>
+            </button>
+            <button v-if="licencia.estado" class="btn-control btn btn-outline-warning btn-sm rounded-pill"
+                    @click="desactivarLicenciaMarcada(licencia.id)">
+              <i class="bi bi-lock"></i>
+            </button>
+            <button v-if="!licencia.estado" class="btn-control btn btn-outline-success btn sm rounded-pill"
+                    @click="activarLicenciaMarcada(licencia.id)">
+              <i class="bi bi-unlock"></i>
+            </button>
+            <button class="btn-control btn btn-outline-danger btn-sm rounded-pill" @click="deleteLicenciaMarcada(licencia.id)">
+              <i class="bi bi-trash"></i>
+            </button>
+          </td>
+        </tr>
+        </tbody>
       </table>
     </div>
+    <!-- Paginación -->
     <div class="pagination-container text-center mt-4">
-      <button class="btn btn-outline-secondary mx-2" :disabled="listadoLicencias.currentPage === 0"
-        @click="cambiarPagina(listadoLicencias.currentPage - 1)">Anterior</button>
-      <span> Página {{ listadoLicencias.currentPage + 1 }} de {{ listadoLicencias.totalPages }}</span>
+      <button class="btn btn-outline-secondary mx-2" :disabled="listadoLicenciasStore.currentPage === 0"
+              @click="cambiarPagina(listadoLicenciasStore.currentPage - 1)">
+        <i class="bi bi-chevron-left"></i> Anterior
+      </button>
+      <span> Página {{ listadoLicenciasStore.currentPage + 1 }} de {{ listadoLicenciasStore.totalPages }} </span>
       <button class="btn btn-outline-secondary mx-2"
-        :disabled="listadoLicencias.currentPage === listadoLicencias.totalPages - 1"
-        @click="cambiarPagina(listadoLicencias.currentPage + 1)">
-        Siguiente
+              :disabled="listadoLicenciasStore.currentPage === listadoLicenciasStore.totalPages - 1"
+              @click="cambiarPagina(listadoLicenciasStore.currentPage + 1)">
+        Siguiente <i class="bi bi-chevron-right"></i>
       </button>
     </div>
-
-    <div v-if="mostrarModal" class="modal-overlay" @click.self="cerrarModal">
+    <!-- Modal de edición -->
+    <div v-if="mostrarModalEdicion" class="modal-overlay">
       <div class="modal-container">
         <div class="modal-header">
-          <h5 class="modal-title">Añadir Nueva Licencia</h5>
+          <h5>Editar Licencia</h5>
+          <button class="btn-close" @click="cerrarModal">x</button>
         </div>
         <div class="modal-body">
-          <form @submit.prevent="registrarNuevaLicencia">
+          <form @submit.prevent="guardarEdicionLicencia">
             <div class="mb-3">
-              <label for="numeroLicencia" class="form-label">Número de Licencia</label>
+              <label for="editLicenciaNumero" class="form-label">Número</label>
+              <input v-model="licenciaEditada.numero" type="text" class="form-control" id="editLicenciaNumero"
+                     required/>
+            </div>
+            <button type="submit" class="btn btn-success mt-3" :disabled="editarLicenciaStore.cargando">
+              {{ editarLicenciaStore.cargando ? 'Guardando...' : 'Guardar' }}
+            </button>
+          </form>
+          <div v-if="editarLicenciaStore.error" class="alert alert-danger mt-3" role="alert">
+            {{ editarLicenciaStore.error }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de add licencia -->
+    <div v-if="mostrarModal" class="modal-overlay">
+      <div class="modal-container">
+        <div class="modal-header">
+          <h5>Añadir Licencia</h5>
+          <button class="btn-close" @click="cerrarModalAdd">x</button>
+        </div>
+        <div class="modal-body">
+          <form @submit.prevent="registrarLicenciaNueva">
+            <div class="mb-3">
+              <label>Número Licencia</label>
               <input type="text" class="form-control" id="numeroLicencia" v-model="nuevaLicencia.numero" required>
             </div>
-            <button type="submit" class="btn btn-primary">Registrar Licencia</button>
+            <button type="submit" class="btn btn-primary mt-3">Registrar Licencia</button>
           </form>
           <div v-if="mensaje" :class="['alert', mensajeTipo === 'success' ? 'alert-success' : 'alert-danger']"
-            role="alert">
+               role="alert">
             {{ mensaje }}
           </div>
         </div>
       </div>
     </div>
+
   </section>
 </template>
-
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useListadoLicenciasStore } from '@/stores/admin/listadoLicencias';
-import { useRegistrarLicenciaStore } from '@/stores/admin/registrarLicencia';
-import { useDesactivarLicenciaStore } from '@/stores/admin/desactivarLicencia';
-import { useActivarLicenciaStore } from '@/stores/admin/activarLicencia';
+import {ref, onMounted, computed} from 'vue'
+import {useListadoLicenciasStore} from '@/stores/admin/listadoLicencias';
+import {useAddLicenciaStore} from '@/stores/admin/addLicencia';
+import {useEditarLicenciaStore} from '@/stores/admin/editarLicencia';
+import {useActivarLicenciaStore} from '@/stores/admin/activarLicencia';
+import {useDesactivarLicenciaStore} from '@/stores/admin/desactivarLicencia';
+import {useDeleteLicenciaStore} from '@/stores/admin/deleteLicencia';
+import {debounce} from 'lodash';
 
-const listadoLicencias = useListadoLicenciasStore();
-const registrarLicencia = useRegistrarLicenciaStore();
-const desactivarLicenciaStore = useDesactivarLicenciaStore();
+const listadoLicenciasStore = useListadoLicenciasStore();
+const addLicenciaStore = useAddLicenciaStore();
+const editarLicenciaStore = useEditarLicenciaStore();
 const activarLicenciaStore = useActivarLicenciaStore();
+const desactivarLicenciaStore = useDesactivarLicenciaStore();
+const deleteLicenciaStore = useDeleteLicenciaStore();
 
-const licencias = ref([]);
-const estado = ref("");
-const numero = ref("");
+
+
+const numero = ref("")
+const licencias = computed(() => listadoLicenciasStore.licencias)
 const nuevaLicencia = ref({
   numero: '',
-});
-const mostrarModal = ref(false);
-const mensaje = ref('');
-const mensajeTipo = ref('');
+})
+const mostrarModal = ref(false)
+const mostrarModalEdicion = ref(false)
+const mensaje = ref('')
+const mensajeTipo = ref('')
+const licenciaEditada = ref(null)
+
+const filtrarLicencias = debounce(async () => {
+  await listadoLicenciasStore.filtrarLicencia(numero.value);
+  licencias.value = [...listadoLicenciasStore.licencias];
+}, 500)
 
 onMounted(async () => {
-  try {
-    await listadoLicencias.obtenerListadoLicencias();
-    licencias.value = listadoLicencias.licencias;
-  } catch (error) {
-    console.error('Error al obtener licencias:', error);
-  }
-});
+  await listadoLicenciasStore.obtenerListadoLicencias(0, "")
+  licencias.value = [...listadoLicenciasStore.licencias]
+})
 
 const cambiarPagina = async (pagina) => {
-  if (pagina >= 0 && pagina < listadoLicencias.totalPages) {
+  if (pagina >= 0 && pagina < listadoLicenciasStore.totalPages) {
     try {
-      await listadoLicencias.obtenerListadoLicencias(pagina, estado.value, numero.value);
-      licencias.value = listadoLicencias.licencias;
+      await listadoLicenciasStore.obtenerListadoLicencias(pagina, numero.value)
     } catch (error) {
-      console.error('Error al cambiar de página:', error);
+      console.log('Error al cambiar de pagina', error)
     }
   }
-};
-
-const filtrarLicencias = async () => {
-  try {
-    await listadoLicencias.obtenerListadoLicencias(0, estado.value, numero.value);
-    licencias.value = listadoLicencias.licencias;
-  } catch (error) {
-    console.error('Error al filtrar licencias:', error);
-  }
-};
-
+}
 const refrescarTabla = async () => {
-  try {
-    await listadoLicencias.obtenerListadoLicencias();
-    licencias.value = listadoLicencias.licencias;
-  } catch (error) {
-    console.error('Error al refrescar la tabla:', error);
-  }
-};
-
-const desactivarLicencia = async (id) => {
-  try {
-    await desactivarLicenciaStore.desactivarLicencia(id);
-    await refrescarTabla();
-  } catch (error) {
-    console.error('Error al desactivar licencia:', error);
-  }
-};
-
-const activarLicencia = async (id) => {
-  try {
-    await activarLicenciaStore.activarLicencia(id);
-    await refrescarTabla();
-  } catch (error) {
-    console.error('Error al activar licencia:', error);
-  }
-};
+  await listadoLicenciasStore.obtenerListadoLicencias(0, numero.value)
+  licencias.value = [...listadoLicenciasStore.licencias]
+}
 
 const abrirModalNuevaLicencia = () => {
-  nuevaLicencia.value = { numero: '' };
+  nuevaLicencia.value = {numero: ''};
   mensaje.value = '';
   mensajeTipo.value = '';
   mostrarModal.value = true;
-};
-
-const cerrarModal = () => {
+}
+const cerrarModalAdd = () => {
   mostrarModal.value = false;
-  nuevaLicencia.value = { numero: '' };
+  nuevaLicencia.value = {numero: ''};
   mensaje.value = '';
   mensajeTipo.value = '';
-};
+}
 
-const registrarNuevaLicencia = async () => {
+const registrarLicenciaNueva = async () => {
   const licenciaRegex = /^\d{4}-\d{4}$/;
   if (!licenciaRegex.test(nuevaLicencia.value.numero)) {
     mensaje.value = 'El formato del número de licencia es incorrecto. Por ejemplo, 1234-1234.';
@@ -185,12 +191,15 @@ const registrarNuevaLicencia = async () => {
   }
 
   try {
-    await registrarLicencia.registrarLicencia(nuevaLicencia.value);
+    await addLicenciaStore.addLicencia(nuevaLicencia.value);
     mensaje.value = 'Licencia registrada correctamente';
     mensajeTipo.value = 'success';
     await refrescarTabla();
+    setTimeout(()=>{
+      cerrarModalAdd();
+    },1000)
   } catch (error) {
-    if (error.response && error.response.status === 409) {
+    if (error.response && error.response.status === 400) {
       mensaje.value = 'El número de licencia ya existe';
       mensajeTipo.value = 'danger';
     } else {
@@ -198,9 +207,55 @@ const registrarNuevaLicencia = async () => {
       mensajeTipo.value = 'danger';
     }
   }
-};
-</script>
+}
+const abrirModalEdicion = (licencia) => {
+  licenciaEditada.value = {...licencia};
+  mostrarModalEdicion.value = true;
+}
 
+
+const cerrarModal = () => {
+  licenciaEditada.value = null;
+  mostrarModalEdicion.value = false;
+  editarLicenciaStore.error = null;
+}
+
+const guardarEdicionLicencia = async () => {
+  if (!licenciaEditada.value) return;
+
+  const licenciaRegex = /^\d{4}-\d{4}$/;
+  if (!licenciaRegex.test(licenciaEditada.value.numero)) {
+    editarLicenciaStore.error = 'El formato del número de licencia es incorrecto. Por ejemplo, 1234-1234.';
+    return;
+  }
+
+  try {
+    await editarLicenciaStore.editarLicencia(licenciaEditada.value.id, {
+      numero: licenciaEditada.value.numero
+    });
+    await refrescarTabla();
+    setTimeout(()=>{
+      cerrarModal();
+    },1000)
+  } catch (error) {
+    console.error('Error al editar la licencia:', error);
+  }
+}
+const desactivarLicenciaMarcada = async (id) => {
+  await desactivarLicenciaStore.desactivarLicencia(id);
+  await refrescarTabla();
+}
+const activarLicenciaMarcada = async (id) => {
+  await activarLicenciaStore.activarLicencia(id);
+  await refrescarTabla();
+}
+const deleteLicenciaMarcada = async (id) => {
+  await deleteLicenciaStore.deleteLicencia(id);
+  await refrescarTabla();
+}
+
+
+</script>
 <style scoped>
 .modal-overlay {
   position: fixed;
@@ -239,7 +294,12 @@ const registrarNuevaLicencia = async () => {
   cursor: pointer;
 }
 
-.alert {
-  margin-top: 10px;
+.btn-control {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-inline: 2px;
 }
 </style>

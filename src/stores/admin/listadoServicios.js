@@ -1,6 +1,7 @@
-import { defineStore } from "pinia";
+import {defineStore} from "pinia";
 import axios from "axios";
-import { useLoginStore } from "../loginAdmin";
+import {useLoginAdminStore} from "../loginAdmin";
+import {debounce} from "lodash";
 
 export const useListadoServiciosStore = defineStore("listadoServicios", {
   state: () => ({
@@ -13,23 +14,22 @@ export const useListadoServiciosStore = defineStore("listadoServicios", {
     totalElements: 0,
   }),
   actions: {
-    async obtenerListadoServicios(page = 0, estado = "") {
-      this.cargando=true
-      this.error=null
+    async obtenerListadoServicios(page = 0, tipo = "") {
+      this.cargando = true;
+      this.error = null;
 
-      const loginStrore = useLoginStore()
-      const token = loginStrore.token
+      const loginStore = useLoginAdminStore();
+      const token = loginStore.token;
 
-      if
-      (!token) {
-        this.error = "Token no disponible"
-        console.error("Token no disponible")
-        this.cargando = false
-        return
+      if (!token) {
+        this.error = "Token no disponible";
+        console.error("Token no disponible");
+        this.cargando = false;
+        return;
       }
+
       try {
-        const respuesta =
-        await axios.get("https://luxeride-backend.onrender.com/api/admin/allServicios", {
+        const respuesta = await axios.get("http://localhost:8080/api/admin/allServicios", {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -37,20 +37,20 @@ export const useListadoServiciosStore = defineStore("listadoServicios", {
           params: {
             page,
             size: this.pageSize,
-            estado,
+            tipo,
           },
         });
-        this.servicios = respuesta.data.content
-        this.totalPages = respuesta.data.totalPages
-        this.currentPage = respuesta.data.number
+
+        this.servicios = respuesta.data.content;
+        this.totalPages = respuesta.data.totalPages;
+        this.currentPage = respuesta.data.number;
+        this.totalElements = respuesta.data.totalElements;
+      } catch (error) {
+        this.error = error.response?.data?.message || error.message;
+        console.error("Error al obtener servicios:", this.error);
+      } finally {
+        this.cargando = false;
       }
-      catch (error) {
-        this.error = error.response?.data?.message || error.message
-        console.error("Error al obtener servicios:", this.error)
-      }
-      finally {
-        this.cargando = false
-      }
-    }
+    },
   }
 })

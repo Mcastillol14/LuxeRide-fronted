@@ -1,32 +1,23 @@
 <template>
   <section id="usuarios" class="container my-5">
-    <h5 class="text-center mb-4">Usuarios</h5>
     <div class="row mb-4">
       <div class="col-12 col-md-6 col-lg-4 mb-3">
         <input v-model="dni" type="text" class="form-control" placeholder="Filtrar por DNI" @input="filtrarUsuarios" />
       </div>
-      <div class="col-12 col-md-6 col-lg-4 mb-3">
-        <select v-model="rol" class="form-control" @change="filtrarUsuarios">
-          <option value="">Filtrar por rol</option>
-          <option value="ROL_CLIENTE">Cliente</option>
-          <option value="ROL_TAXISTA">Taxista</option>
-          <option value="ROL_ADMIN">Administrador</option>
-        </select>
-      </div>
     </div>
 
     <div class="table-responsive">
-      <table class="table table-striped table-hover table-bordered shadow-sm rounded">
+      <table class="table table-striped table-hover table-bordered shadow-sm rounded" style="table-layout: fixed;">
         <thead class="table-dark">
           <tr>
-            <th>Id</th>
-            <th>Nombre</th>
-            <th>Apellidos</th>
-            <th>DNI</th>
+            <th style="width: 50px;" >Id</th>
+            <th >Nombre</th>
+            <th >Apellidos</th>
+            <th style="width: 120px;" >DNI</th>
             <th>Email</th>
-            <th>Rol</th>
-            <th class="estado-col">Estado</th>
-            <th>Acciones</th>
+            <th style="width: 120px;">Rol</th>
+            <th class="estado-col" >Estado</th>
+            <th style="width: 140px;">Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -39,29 +30,30 @@
             <td>{{ usuario.rol }}</td>
             <td class="estado-col">
               <span :class="usuario.accountNonLocked ? 'text-success' : 'text-danger'">
+                <i :class="usuario.accountNonLocked ? 'bi bi-check-circle' : 'bi bi-x-circle'"></i>
                 {{ usuario.accountNonLocked ? 'Activo' : 'Bloqueado' }}
               </span>
             </td>
             <td>
-              <button v-if="usuario.rol !== 'ROL_ADMIN'" class="btn btn-outline-primary btn-sm rounded-pill px-4 mb-2"
-                @click="editarUsuario(usuario)">
-                Editar
+              <button v-if="usuario.rol !== 'ROL_ADMIN'" class="btn btn-outline-primary btn-sm rounded-pill  mx-1"
+                @click="abrirModalEdicion(usuario)">
+                <i class="bi bi-pencil"></i>
               </button>
               <button v-if="usuario.accountNonLocked && usuario.rol !== 'ROL_ADMIN'"
-                class="btn btn-outline-danger btn-sm rounded-pill px-4 mb-2" @click="desactivarCuenta(usuario.dni)">
-                Desactivar
+                class="btn btn-outline-danger btn-sm rounded-pill  mx-1" @click="bloquearCuenta(usuario.id)">
+                <i class="bi bi-lock"></i>
               </button>
               <button v-if="!usuario.accountNonLocked && usuario.rol !== 'ROL_ADMIN'"
-                class="btn btn-outline-success btn-sm rounded-pill px-4 mb-2" @click="activarCuenta(usuario.dni)">
-                Activar
+                class="btn btn-outline-success btn-sm rounded-pill  mx-1" @click="desbloquearCuenta(usuario.id)">
+                <i class="bi bi-unlock"></i>
               </button>
               <button v-if="usuario.rol !== 'ROL_TAXISTA' && usuario.rol !== 'ROL_ADMIN'"
-                class="btn btn-outline-success btn-sm rounded-pill px-4 mb-2" @click="añadirTaxista(usuario)">
-                Añadir como Taxista
+                class="btn btn-outline-success btn-sm rounded-pill  mx-1" @click="addTaxista(usuario.id)">
+                <i class="bi bi-person-plus"></i>
               </button>
               <button v-if="usuario.rol === 'ROL_TAXISTA' && usuario.rol !== 'ROL_ADMIN'"
-                class="btn btn-outline-warning btn-sm rounded-pill px-4 mb-2" @click="eliminarTaxista(usuario)">
-                Eliminar de Taxista
+                class="btn btn-outline-warning btn-sm rounded-pill  mx-1" @click="deleteTaxista(usuario.id)">
+                <i class="bi bi-person-dash"></i>
               </button>
             </td>
           </tr>
@@ -69,51 +61,41 @@
       </table>
     </div>
 
+    <!-- Paginación -->
     <div class="pagination-container text-center mt-4">
       <button class="btn btn-outline-secondary mx-2" :disabled="listadoUsuariosStore.currentPage === 0"
         @click="cambiarPagina(listadoUsuariosStore.currentPage - 1)">
-        Anterior
+        <i class="bi bi-chevron-left"></i> Anterior
       </button>
       <span> Página {{ listadoUsuariosStore.currentPage + 1 }} de {{ listadoUsuariosStore.totalPages }} </span>
       <button class="btn btn-outline-secondary mx-2"
         :disabled="listadoUsuariosStore.currentPage === listadoUsuariosStore.totalPages - 1"
         @click="cambiarPagina(listadoUsuariosStore.currentPage + 1)">
-        Siguiente
+        Siguiente <i class="bi bi-chevron-right"></i>
       </button>
     </div>
 
-    <!-- Modal de Edición -->
-    <div v-if="modalVisible" class="modal-overlay" @click.self="cerrarModal">
+    <!-- Modal de edición -->
+    <div v-if="usuarioEditado" class="modal-overlay">
       <div class="modal-container">
         <div class="modal-header">
-          <h5 class="modal-title">Editar Usuario</h5>
-          <button type="button" class="btn-close" @click="cerrarModal" aria-label="Close"></button>
+          <h5>Editar Usuario</h5>
+          <button class="btn-close" @click="cerrarModal">×</button>
         </div>
         <div class="modal-body">
-          <form @submit.prevent="submitForm">
-            <div class="mb-3">
-              <label for="nombre" class="form-label">Nombre</label>
-              <input type="text" id="nombre" v-model="usuarioEdit.nombre" class="form-control" required />
-            </div>
-            <div class="mb-3">
-              <label for="apellidos" class="form-label">Apellidos</label>
-              <input type="text" id="apellidos" v-model="usuarioEdit.apellidos" class="form-control" required />
-            </div>
-            <div class="mb-3">
-              <label for="dni" class="form-label">DNI</label>
-              <input type="text" id="dni" v-model="usuarioEdit.dni" :class="{ 'is-invalid': dniError }"
-                class="form-control" required @input="clearDniError" />
-              <div v-if="dniError" class="text-danger">{{ dniError }}</div>
-            </div>
-            <div class="mb-3">
-              <label for="email" class="form-label">Correo Electrónico</label>
-              <input type="email" id="email" v-model="usuarioEdit.email" :class="{ 'is-invalid': emailError }"
-                class="form-control" required @input="clearEmailError" />
-              <div v-if="emailError" class="text-danger">{{ emailError }}</div>
-            </div>
+          <label>Nombre:</label>
+          <input v-model="usuarioEditado.nombre" type="text" class="form-control mb-2" />
 
-            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-          </form>
+          <label>Apellidos:</label>
+          <input v-model="usuarioEditado.apellidos" type="text" class="form-control mb-2" />
+
+          <label>DNI:</label>
+          <input v-model="usuarioEditado.dni" type="text" class="form-control mb-2" />
+
+          <label>Email:</label>
+          <input v-model="usuarioEditado.email" type="email" class="form-control mb-2" />
+
+          <button class="btn btn-success mt-3" @click="guardarCambios">Guardar</button>
         </div>
       </div>
     </div>
@@ -121,112 +103,88 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useListadoUsuariosStore } from '../../stores/admin/listadoUsuarios';
-import { useDesactivarCuentaStore } from '../../stores/admin/desactivarCuenta';
-import { useActivarCuentaStore } from '../../stores/admin/activarCuenta';
+import { useBloquearCuentaStore } from '../../stores/admin/bloquearCuenta';
+import { useDesbloquearCuentaStore } from '../../stores/admin/desbloquearCuenta';
 import { useAddTaxistaStore } from '../../stores/admin/addTaxista';
-import { useEliminarTaxistaStore } from '../../stores/admin/eliminarTaxista';
-import { useEditarUsuarioStore } from '../../stores/admin/editarUsuario';
+import { useDeleteTaxistaStore } from '../../stores/admin/deleteTaxista';
+import { useEditarUsuarioStore } from '@/stores/admin/editarUsuario';
+import debounce from "lodash/debounce";
 
 const listadoUsuariosStore = useListadoUsuariosStore();
-const desactivarCuentaStore = useDesactivarCuentaStore();
-const activarCuentaStore = useActivarCuentaStore();
+const bloquearCuentaStore = useBloquearCuentaStore();
+const desbloquearCuentaStore = useDesbloquearCuentaStore();
 const addTaxistaStore = useAddTaxistaStore();
-const eliminarTaxistaStore = useEliminarTaxistaStore();
+const deleteTaxistaStore = useDeleteTaxistaStore();
 const editarUsuarioStore = useEditarUsuarioStore();
 
-const usuarios = ref([]);
+
 const dni = ref("");
-const rol = ref("");
-const modalVisible = ref(false);
-const usuarioEdit = ref({});
-const dniError = ref("");
-const emailError = ref("");
+const usuarioEditado = ref(null);
+const usuarios=computed(()=>listadoUsuariosStore.usuarios)
 
-const editarUsuario = (usuario) => {
-  usuarioEdit.value = { ...usuario };
-  modalVisible.value = true;
-};
+const filtrarUsuarios = debounce(async () => {
+  await listadoUsuariosStore.obtenerListadoUsuarios(0, dni.value);
+  usuarios.value = [...listadoUsuariosStore.usuarios];
+}, 500);
 
-const cerrarModal = () => {
-  modalVisible.value = false;
-  dniError.value = "";
-  emailError.value = "";
-};
+onMounted(async () => {
+  await listadoUsuariosStore.obtenerListadoUsuarios(0, "");
+  usuarios.value = [...listadoUsuariosStore.usuarios];
+});
 
-const clearDniError = () => {
-  dniError.value = "";
-};
-
-const clearEmailError = () => {
-  emailError.value = "";
-};
-
-const submitForm = async () => {
-  const dniRegex = /^\d{8}[A-Za-z]$/;
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-  if (!dniRegex.test(usuarioEdit.value.dni)) {
-    dniError.value = "El DNI debe tener 8 números seguidos de una letra";
-    return;
+const cambiarPagina = async (pagina) => {
+  if(pagina >= 0 && pagina<listadoUsuariosStore.totalPages){
+    try{
+      await listadoUsuariosStore.obtenerListadoUsuarios(pagina,dni.value)
+      usuarios.value=listadoUsuariosStore.usuarios
+    }catch(error){
+      console.log('Error al cambiar de pagina',error)
+    }
   }
+};
 
-  if (!emailRegex.test(usuarioEdit.value.email)) {
-    emailError.value = "El correo electrónico no es válido";
-    return;
-  }
-
-  await editarUsuarioStore.editarCuenta(usuarioEdit.value.id, usuarioEdit.value);
-
-  if (editarUsuarioStore.error) {
-    dniError.value = editarUsuarioStore.error;
-    emailError.value = editarUsuarioStore.error;
-    return;
-  }
-
+const bloquearCuenta = async (id) => {
+  await bloquearCuentaStore.bloquearCuenta(id);
   await refrescarTabla();
-  cerrarModal();
+};
+
+const desbloquearCuenta = async (id) => {
+  await desbloquearCuentaStore.desbloquearCuenta(id);
+  await refrescarTabla();
+};
+
+const addTaxista = async (id) => {
+  await addTaxistaStore.addTaxista(id);
+  await refrescarTabla();
+};
+
+const deleteTaxista = async (id) => {
+  await deleteTaxistaStore.deleteTaxista(id);
+  await refrescarTabla();
 };
 
 const refrescarTabla = async () => {
-  await listadoUsuariosStore.obtenerListadoUsuarios();
-  usuarios.value = listadoUsuariosStore.usuarios;
+  await listadoUsuariosStore.obtenerListadoUsuarios(0, dni.value);
+  usuarios.value = [...listadoUsuariosStore.usuarios];
 };
 
-const cambiarPagina = async (pagina) => {
-  await listadoUsuariosStore.obtenerListadoUsuarios(pagina, rol.value, dni.value);
-  usuarios.value = listadoUsuariosStore.usuarios;
+const abrirModalEdicion = (usuario) => {
+  usuarioEditado.value = { ...usuario };
 };
 
-const filtrarUsuarios = async () => {
-  await listadoUsuariosStore.obtenerListadoUsuarios(0, rol.value, dni.value);
-  usuarios.value = listadoUsuariosStore.usuarios;
+const cerrarModal = () => {
+  usuarioEditado.value = null;
 };
 
-const desactivarCuenta = async (dni) => {
-  await desactivarCuentaStore.desactivarCuenta(dni);
+const guardarCambios = async () => {
+  await editarUsuarioStore.editarCuenta(usuarioEditado.value.id, usuarioEditado.value);
+  setTimeout(()=>{
+    cerrarModal();
+  },1000)
   await refrescarTabla();
 };
-
-const activarCuenta = async (dni) => {
-  await activarCuentaStore.activarCuenta(dni);
-  await refrescarTabla();
-};
-
-const añadirTaxista = async (usuario) => {
-  await addTaxistaStore.añadirTaxista(usuario);
-  await refrescarTabla();
-};
-
-const eliminarTaxista = async (usuario) => {
-  await eliminarTaxistaStore.eliminarTaxista(usuario);
-  await refrescarTabla();
-};
-
-onMounted(async () => {
-  await refrescarTabla();
-});
 </script>
 
 <style scoped>
@@ -240,6 +198,11 @@ onMounted(async () => {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.table td {
+  word-wrap: break-word;
+  word-break: break-word;
 }
 
 .modal-container {
@@ -268,11 +231,7 @@ onMounted(async () => {
 }
 
 .estado-col {
-  width: 100px;
-
+  width: 125px;
 }
 
-.is-invalid {
-  border-color: #dc3545;
-}
 </style>

@@ -1,18 +1,18 @@
 import axios from "axios";
-import { useLoginStore } from "../loginAdmin";
+import { useLoginAdminStore } from "../loginAdmin";
 import { defineStore } from "pinia";
 
-export const useDesactivarCuentaStore = defineStore("desactivarCuenta", {
+export const useDesbloquearCuentaStore = defineStore("desbloquearCuenta", {
   state: () => ({
     error: null,
     cargando: false,
   }),
   actions: {
-    async desactivarCuenta(dni) {
+    async desbloquearCuenta(id) {
       this.cargando = true;
       this.error = null;
 
-      const loginStore = useLoginStore();
+      const loginStore = useLoginAdminStore();
       const token = loginStore.token;
 
       if (!token) {
@@ -23,16 +23,16 @@ export const useDesactivarCuentaStore = defineStore("desactivarCuenta", {
       }
 
       try {
-        const response = await axios.put("https://luxeride-backend.onrender.com/api/admin/desactivarCuenta", { dni }, {
+        const response = await axios.put(`http://localhost:8080/api/admin/desbloquearCuenta/${id}`, null, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           }
         });
-        console.log("Cuenta desactivada correctamente:", response.data);
+        console.log("Cuenta desbloqueada correctamente:", response.data);
       } catch (error) {
         this.error = error.response?.data?.message || error.message;
-        console.error("Error al desactivar cuenta:", this.error);
+        console.error("Error al desbloquear cuenta:", this.error);
       } finally {
         this.cargando = false;
       }

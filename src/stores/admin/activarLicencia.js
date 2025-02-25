@@ -1,11 +1,11 @@
 import { defineStore } from "pinia";
 import axios from "axios";
-import { useLoginStore } from "../loginAdmin";
+import { useLoginAdminStore } from "../loginAdmin";
 
 export const useActivarLicenciaStore = defineStore("activarLicencia", {
   actions: {
     async activarLicencia(id) {
-      const loginStore = useLoginStore();
+      const loginStore = useLoginAdminStore();
       const token = loginStore.token;
 
       if (!token) {
@@ -13,7 +13,7 @@ export const useActivarLicenciaStore = defineStore("activarLicencia", {
       }
 
       try {
-        await axios.put(`https://luxeride-backend.onrender.com/api/admin/activarLicencia/${id}`, {}, {
+        await axios.put(`http://localhost:8080/api/admin/activarLicencia/${id}`, {}, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,

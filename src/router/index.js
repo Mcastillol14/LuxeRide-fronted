@@ -36,9 +36,11 @@ router.beforeEach((to, from, next) => {
     } else {
       const roles = obtenerRoles();
       if (to.meta.roles.some(role => roles.includes(role))) {
+
         next();
       } else {
         next({ name: 'Index' });
+        alert('No tienes acceso a esta página')
       }
     }
   } else {
