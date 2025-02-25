@@ -17,7 +17,6 @@
         <tr>
           <th>Id</th>
           <th>Numero</th>
-          <th class="estado-col">Estado</th>
           <th style="width: 140px;">Acciones</th>
         </tr>
         </thead>
@@ -26,23 +25,9 @@
           <td>{{ licencia.id }}</td>
           <td>{{ licencia.numero }}</td>
           <td>
-              <span :class="licencia.estado ? 'text-success' : 'text-danger'">
-                <i :class="licencia.estado ? 'bi bi-check-circle' : 'bi bi-x-circle'"></i>
-                {{ licencia.estado ? 'Activa' : 'Desactivada' }}
-              </span>
-          </td>
-          <td>
             <button class="btn-control btn btn-outline-primary btn-sm rounded-pill"
                     @click="abrirModalEdicion(licencia)">
               <i class="bi bi-pencil"></i>
-            </button>
-            <button v-if="licencia.estado" class="btn-control btn btn-outline-warning btn-sm rounded-pill"
-                    @click="desactivarLicenciaMarcada(licencia.id)">
-              <i class="bi bi-lock"></i>
-            </button>
-            <button v-if="!licencia.estado" class="btn-control btn btn-outline-success btn sm rounded-pill"
-                    @click="activarLicenciaMarcada(licencia.id)">
-              <i class="bi bi-unlock"></i>
             </button>
             <button class="btn-control btn btn-outline-danger btn-sm rounded-pill" @click="deleteLicenciaMarcada(licencia.id)">
               <i class="bi bi-trash"></i>
@@ -120,16 +105,12 @@ import {ref, onMounted, computed} from 'vue'
 import {useListadoLicenciasStore} from '@/stores/admin/listadoLicencias';
 import {useAddLicenciaStore} from '@/stores/admin/addLicencia';
 import {useEditarLicenciaStore} from '@/stores/admin/editarLicencia';
-import {useActivarLicenciaStore} from '@/stores/admin/activarLicencia';
-import {useDesactivarLicenciaStore} from '@/stores/admin/desactivarLicencia';
 import {useDeleteLicenciaStore} from '@/stores/admin/deleteLicencia';
 import {debounce} from 'lodash';
 
 const listadoLicenciasStore = useListadoLicenciasStore();
 const addLicenciaStore = useAddLicenciaStore();
 const editarLicenciaStore = useEditarLicenciaStore();
-const activarLicenciaStore = useActivarLicenciaStore();
-const desactivarLicenciaStore = useDesactivarLicenciaStore();
 const deleteLicenciaStore = useDeleteLicenciaStore();
 
 
@@ -240,14 +221,6 @@ const guardarEdicionLicencia = async () => {
   } catch (error) {
     console.error('Error al editar la licencia:', error);
   }
-}
-const desactivarLicenciaMarcada = async (id) => {
-  await desactivarLicenciaStore.desactivarLicencia(id);
-  await refrescarTabla();
-}
-const activarLicenciaMarcada = async (id) => {
-  await activarLicenciaStore.activarLicencia(id);
-  await refrescarTabla();
 }
 const deleteLicenciaMarcada = async (id) => {
   await deleteLicenciaStore.deleteLicencia(id);
