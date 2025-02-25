@@ -20,7 +20,6 @@
         <th>Matricula</th>
         <th>Licencia</th>
         <th>Usuarios</th>
-        <th>Estado</th>
         <th>Disponible</th>
         <th>Acciones</th>
       </tr>
@@ -46,14 +45,6 @@
           </span>
         </td>
         <td>
-          <button v-if="coche.estado" class="btn-control btn btn-outline-warning btn-sm rounded-pill"
-                  @click="desactivarCocheMarcada(coche.id)">
-            <i class="bi bi-lock"></i>
-          </button>
-          <button v-if="!coche.estado" class="btn-control btn btn-outline-success btn sm rounded-pill"
-                  @click="activarCocheMarcada(coche.id)">
-            <i class="bi bi-unlock"></i>
-          </button>
           <button class="btn-control btn btn-outline-success btn sm rounded-pill"
           @click="abrirModalAddLicencia"
           ></button>

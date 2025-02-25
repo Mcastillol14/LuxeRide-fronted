@@ -20,7 +20,6 @@
           <th>Tipo</th>
           <th>Descripción</th>
           <th>Precio por kilómetro</th>
-          <th class="estado-col">Estado</th>
           <th style="width: 140px;">Acciones</th>
         </tr>
         </thead>
@@ -31,20 +30,6 @@
           <td>{{ servicio.descripcion }}</td>
           <td>{{ servicio.precioPorKm }}€</td>
           <td>
-              <span :class="servicio.estado ? 'text-success' : 'text-danger'">
-                 <i :class="servicio.estado ? 'bi bi-check-circle' : 'bi bi-x-circle'"></i>
-                {{ servicio.estado ? 'Activo' : 'Desactivado' }}
-              </span>
-          </td>
-          <td>
-            <button v-if="servicio.estado" class="btn-control btn btn-outline-warning btn-sm rounded-pill"
-                    @click="desactivarServicioMarcada(servicio.id)">
-              <i class="bi bi-lock"></i>
-            </button>
-            <button v-if="!servicio.estado" class="btn-control btn btn-outline-success btn sm rounded-pill"
-                    @click="activarServicioMarcada(servicio.id)">
-              <i class="bi bi-unlock"></i>
-            </button>
             <button class="btn-control btn btn-outline-danger btn-sm rounded-pill"
                     @click="deleteServicioMarcada(servicio.id)">
               <i class="bi bi-trash"></i>
@@ -125,15 +110,12 @@
 import {ref, onMounted, computed} from 'vue';
 import {useListadoServiciosStore} from '@/stores/admin/listadoServicios';
 import {useAddServicioStore} from "@/stores/admin/addServicio.js";
-import {useDesactivarServicioStore} from "@/stores/admin/desactivarServicio.js";
-import {useActivarServicioStore} from "@/stores/admin/activarServicio.js";
 import {useDeleteServicioStore} from "@/stores/admin/deleteServicio.js";
 import debounce from "lodash/debounce";
 
 const listadoServiciosStore = useListadoServiciosStore();
 const addServicioStore = useAddServicioStore();
-const activarServicioStore = useActivarServicioStore();
-const desactivarServicioStore = useDesactivarServicioStore();
+
 const deleteServicioStore = useDeleteServicioStore();
 
 const servicios = computed(() => listadoServiciosStore.servicios);
@@ -208,16 +190,6 @@ const registrarServicioNuevo = async () => {
     }
     mensajeTipo.value = 'danger';
   }
-};
-
-const desactivarServicioMarcada = async (id) => {
-  await desactivarServicioStore.desactivarServicio(id);
-  await refrescarTabla();
-};
-
-const activarServicioMarcada = async (id) => {
-  await activarServicioStore.activarServicio(id);
-  await refrescarTabla();
 };
 
 const deleteServicioMarcada = async (id) => {
