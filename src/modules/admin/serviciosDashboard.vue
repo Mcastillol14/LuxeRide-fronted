@@ -13,14 +13,14 @@
     </div>
 
     <div class="table-responsive">
-      <table class="table table-striped table-hover table-bordered shadow-sm rounded" style="table-layout: fixed;">
+      <table class="table table-striped table-hover table-bordered shadow-sm rounded">
         <thead class="table-dark">
         <tr>
           <th>Id</th>
           <th>Tipo</th>
           <th>Descripción</th>
           <th>Precio por kilómetro</th>
-          <th style="width: 140px;">Acciones</th>
+          <th>Acciones</th>
         </tr>
         </thead>
         <tbody>
@@ -43,13 +43,13 @@
     <div class="pagination-container text-center mt-4">
       <button class="btn btn-outline-secondary mx-2" :disabled="listadoServiciosStore.currentPage === 0"
               @click="cambiarPagina(listadoServiciosStore.currentPage - 1)">
-        Anterior
+        <i class="bi bi-chevron-left"></i>Anterior
       </button>
       <span>Página {{ listadoServiciosStore.currentPage + 1 }} de {{ listadoServiciosStore.totalPages }}</span>
       <button class="btn btn-outline-secondary mx-2"
               :disabled="listadoServiciosStore.currentPage === listadoServiciosStore.totalPages - 1"
               @click="cambiarPagina(listadoServiciosStore.currentPage + 1)">
-        Siguiente
+        Siguiente <i class="bi bi-chevron-right"></i>
       </button>
     </div>
   </section>

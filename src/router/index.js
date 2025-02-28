@@ -16,6 +16,12 @@ const router = createRouter({
       meta: { requiereAuth: true, roles: ['ROLE_ROL_CLIENTE', 'ROLE_ROL_TAXISTA', 'ROLE_ROL_ADMIN'] }
     },
     {
+      path: '/trip',
+      name: 'Trip',
+      component:()=>import("@/views/tripWeb.vue"),
+      meta: { requiereAuth: true, roles: ['ROLE_ROL_CLIENTE', 'ROLE_ROL_TAXISTA', 'ROLE_ROL_ADMIN'] }
+    },
+    {
       path: '/admin',
       name: 'Admin',
       component: () => import('@/views/adminLogin.vue'),
@@ -32,20 +38,20 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   if (to.meta.requiereAuth) {
     if (!estaAutenticado()) {
-      next({ name: 'Admin' });
+      next({ name: 'Index' });
     } else {
       const roles = obtenerRoles();
       if (to.meta.roles.some(role => roles.includes(role))) {
-
         next();
       } else {
         next({ name: 'Index' });
-        alert('No tienes acceso a esta página')
+        alert('No tienes acceso a esta página');
       }
     }
   } else {
     next();
   }
 });
+
 
 export default router;

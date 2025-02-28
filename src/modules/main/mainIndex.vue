@@ -260,8 +260,11 @@ onMounted(() => {
   padding: 20px;
   border-radius: 8px;
   width: 90%;
-  max-width: 400px;
+  max-width: 600px; /* Aumentamos el ancho */
+  max-height: 100vh;  /* Limitamos la altura */
+  overflow-y: auto;  /* Habilitamos el scroll si es necesario */
 }
+
 
 .modal-enter-active,
 .modal-leave-active {

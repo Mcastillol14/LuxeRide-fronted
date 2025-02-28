@@ -7,56 +7,56 @@
     </div>
 
     <div class="table-responsive">
-      <table class="table table-striped table-hover table-bordered shadow-sm rounded" style="table-layout: fixed;">
+      <table class="table table-striped table-hover table-bordered shadow-sm rounded">
         <thead class="table-dark">
-          <tr>
-            <th style="width: 50px;" >Id</th>
-            <th >Nombre</th>
-            <th >Apellidos</th>
-            <th style="width: 120px;" >DNI</th>
-            <th>Email</th>
-            <th style="width: 120px;">Rol</th>
-            <th class="estado-col" >Estado</th>
-            <th style="width: 140px;">Acciones</th>
-          </tr>
+        <tr>
+          <th class="id-column">Id</th>
+          <th>Nombre</th>
+          <th>Apellidos</th>
+          <th style="width: 120px;">DNI</th>
+          <th>Email</th>
+          <th style="width: 120px;">Rol</th>
+          <th class="estado-col">Estado</th>
+          <th style="width: 140px;">Acciones</th>
+        </tr>
         </thead>
         <tbody>
-          <tr v-for="usuario in usuarios" :key="usuario.id">
-            <td>{{ usuario.id }}</td>
-            <td>{{ usuario.nombre }}</td>
-            <td>{{ usuario.apellidos }}</td>
-            <td>{{ usuario.dni }}</td>
-            <td>{{ usuario.email }}</td>
-            <td>{{ usuario.rol }}</td>
-            <td class="estado-col">
+        <tr v-for="usuario in usuarios" :key="usuario.id">
+          <td class="id-column">{{ usuario.id }}</td>
+          <td>{{ usuario.nombre }}</td>
+          <td>{{ usuario.apellidos }}</td>
+          <td>{{ usuario.dni }}</td>
+          <td>{{ usuario.email }}</td>
+          <td>{{ usuario.rol }}</td>
+          <td class="estado-col">
               <span :class="usuario.accountNonLocked ? 'text-success' : 'text-danger'">
                 <i :class="usuario.accountNonLocked ? 'bi bi-check-circle' : 'bi bi-x-circle'"></i>
                 {{ usuario.accountNonLocked ? 'Activo' : 'Bloqueado' }}
               </span>
-            </td>
-            <td>
-              <button v-if="usuario.rol !== 'ROL_ADMIN'" class="btn btn-outline-primary btn-sm rounded-pill  mx-1"
-                @click="abrirModalEdicion(usuario)">
-                <i class="bi bi-pencil"></i>
-              </button>
-              <button v-if="usuario.accountNonLocked && usuario.rol !== 'ROL_ADMIN'"
-                class="btn btn-outline-danger btn-sm rounded-pill  mx-1" @click="bloquearCuenta(usuario.id)">
-                <i class="bi bi-lock"></i>
-              </button>
-              <button v-if="!usuario.accountNonLocked && usuario.rol !== 'ROL_ADMIN'"
-                class="btn btn-outline-success btn-sm rounded-pill  mx-1" @click="desbloquearCuenta(usuario.id)">
-                <i class="bi bi-unlock"></i>
-              </button>
-              <button v-if="usuario.rol !== 'ROL_TAXISTA' && usuario.rol !== 'ROL_ADMIN'"
-                class="btn btn-outline-success btn-sm rounded-pill  mx-1" @click="addTaxista(usuario.id)">
-                <i class="bi bi-person-plus"></i>
-              </button>
-              <button v-if="usuario.rol === 'ROL_TAXISTA' && usuario.rol !== 'ROL_ADMIN'"
-                class="btn btn-outline-warning btn-sm rounded-pill  mx-1" @click="deleteTaxista(usuario.id)">
-                <i class="bi bi-person-dash"></i>
-              </button>
-            </td>
-          </tr>
+          </td>
+          <td>
+            <button v-if="usuario.rol !== 'ROL_ADMIN'" class="btn btn-outline-primary btn-sm rounded-pill mx-1"
+                    @click="abrirModalEdicion(usuario)">
+              <i class="bi bi-pencil"></i>
+            </button>
+            <button v-if="usuario.accountNonLocked && usuario.rol !== 'ROL_ADMIN'"
+                    class="btn btn-outline-danger btn-sm rounded-pill mx-1" @click="bloquearCuenta(usuario.id)">
+              <i class="bi bi-lock"></i>
+            </button>
+            <button v-if="!usuario.accountNonLocked && usuario.rol !== 'ROL_ADMIN'"
+                    class="btn btn-outline-success btn-sm rounded-pill mx-1" @click="desbloquearCuenta(usuario.id)">
+              <i class="bi bi-unlock"></i>
+            </button>
+            <button v-if="usuario.rol !== 'ROL_TAXISTA' && usuario.rol !== 'ROL_ADMIN'"
+                    class="btn btn-outline-success btn-sm rounded-pill mx-1" @click="addTaxista(usuario.id)">
+              <i class="bi bi-person-plus"></i>
+            </button>
+            <button v-if="usuario.rol === 'ROL_TAXISTA' && usuario.rol !== 'ROL_ADMIN'"
+                    class="btn btn-outline-warning btn-sm rounded-pill mx-1" @click="deleteTaxista(usuario.id)">
+              <i class="bi bi-person-dash"></i>
+            </button>
+          </td>
+        </tr>
         </tbody>
       </table>
     </div>
@@ -64,13 +64,13 @@
     <!-- Paginación -->
     <div class="pagination-container text-center mt-4">
       <button class="btn btn-outline-secondary mx-2" :disabled="listadoUsuariosStore.currentPage === 0"
-        @click="cambiarPagina(listadoUsuariosStore.currentPage - 1)">
+              @click="cambiarPagina(listadoUsuariosStore.currentPage - 1)">
         <i class="bi bi-chevron-left"></i> Anterior
       </button>
       <span> Página {{ listadoUsuariosStore.currentPage + 1 }} de {{ listadoUsuariosStore.totalPages }} </span>
       <button class="btn btn-outline-secondary mx-2"
-        :disabled="listadoUsuariosStore.currentPage === listadoUsuariosStore.totalPages - 1"
-        @click="cambiarPagina(listadoUsuariosStore.currentPage + 1)">
+              :disabled="listadoUsuariosStore.currentPage === listadoUsuariosStore.totalPages - 1"
+              @click="cambiarPagina(listadoUsuariosStore.currentPage + 1)">
         Siguiente <i class="bi bi-chevron-right"></i>
       </button>
     </div>
@@ -200,6 +200,14 @@ const guardarCambios = async () => {
   align-items: center;
 }
 
+.table-responsive {
+  overflow-x: auto;
+}
+
+.table {
+  min-width: 1000px;
+}
+
 .table td {
   word-wrap: break-word;
   word-break: break-word;
@@ -234,4 +242,8 @@ const guardarCambios = async () => {
   width: 125px;
 }
 
+.id-column {
+  width: 1%;
+  white-space: nowrap;
+}
 </style>

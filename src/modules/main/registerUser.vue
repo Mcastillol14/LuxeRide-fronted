@@ -1,246 +1,186 @@
 <template>
-  <div class="container py-5">
-    <h1 class="text-center mb-4">Registro</h1>
-    <Form @submit="enviarFormulario" v-slot="{ errors, isSubmitting }" class="formulario">
-      <div class="mb-3">
-        <Field id="name" placeholder="Nombre" name="name" type="text"
-          v-model="datosFormulario.name"
-          :rules="'required'"
-          :class="{ 'is-invalid': errors.name }"
-          class="form-control" />
-        <ErrorMessage name="name" class="invalid-feedback" />
-      </div>
+  <div class="container py-4">
+    <Card class="p-3 shadow-sm mx-auto" style="max-width: 400px;">
+      <template #content>
+        <form @submit.prevent="enviarFormulario">
+          <!-- Agrupación de campos de 2 en 2 -->
+          <div class="d-flex gap-2">
+            <!-- Nombre -->
+            <div class="w-50">
+              <label for="nombre" class="form-label text-sm">Nombre</label>
+              <InputText id="nombre" v-model="datosFormulario.nombre" class="w-100 text-sm" :class="{'p-invalid': errors.nombre}" placeholder="Tu nombre" />
+              <small v-if="errors.nombre" class="p-error">{{ errors.nombre }}</small>
+            </div>
 
-      <div class="mb-3">
-        <Field id="lastName" name="lastName" placeholder="Apellidos" type="text"
-          v-model="datosFormulario.lastName"
-          :rules="'required'"
-          :class="{ 'is-invalid': errors.lastName }"
-          class="form-control" />
-        <ErrorMessage name="lastName" class="invalid-feedback" />
-      </div>
+            <!-- Apellidos -->
+            <div class="w-50">
+              <label for="apellidos" class="form-label text-sm">Apellidos</label>
+              <InputText id="apellidos" v-model="datosFormulario.apellidos" class="w-100 text-sm" :class="{'p-invalid': errors.apellidos}" placeholder="Tus apellidos" />
+              <small v-if="errors.apellidos" class="p-error">{{ errors.apellidos }}</small>
+            </div>
+          </div>
 
-      <div class="mb-3">
-        <Field id="dni" name="dni" placeholder="DNI" type="text"
-          v-model="datosFormulario.dni"
-          :rules="'required|dni'"
-          :class="{ 'is-invalid': errors.dni || serverErrors.dni }"
-          class="form-control" />
-        <ErrorMessage name="dni" class="invalid-feedback" />
-        <div v-if="serverErrors.dni" class="invalid-feedback">{{ serverErrors.dni }}</div>
-      </div>
+          <div class="d-flex gap-2 mt-2">
+            <!-- DNI -->
+            <div class="w-50">
+              <label for="dni" class="form-label text-sm">DNI</label>
+              <InputText id="dni" v-model="datosFormulario.dni" class="w-100 text-sm" :class="{'p-invalid': errors.dni}" placeholder="DNI" maxlength="9" />
+              <small v-if="errors.dni" class="p-error">{{ errors.dni }}</small>
+            </div>
 
-      <div class="mb-3">
-        <Field id="email" name="email" placeholder="Correo electrónico" type="email"
-          v-model="datosFormulario.email"
-          :rules="'required|email'"
-          :class="{ 'is-invalid': errors.email || serverErrors.email }"
-          class="form-control" />
-        <ErrorMessage name="email" class="invalid-feedback" />
-        <div v-if="serverErrors.email" class="invalid-feedback">{{ serverErrors.email }}</div>
-      </div>
+            <!-- Correo Electrónico -->
+            <div class="w-50">
+              <label for="email" class="form-label text-sm">Email</label>
+              <InputText id="email" v-model="datosFormulario.email" class="w-100 text-sm" :class="{'p-invalid': errors.email}" placeholder="Email" />
+              <small v-if="errors.email" class="p-error">{{ errors.email }}</small>
+            </div>
+          </div>
 
-      <div class="mb-3">
-        <Field id="password" name="password" placeholder="Contraseña" type="password"
-          v-model="datosFormulario.password"
-          :rules="'required|passwordMin'"
-          :class="{ 'is-invalid': errors.password }"
-          class="form-control" />
-        <ErrorMessage name="password" class="invalid-feedback" />
-      </div>
 
-      <div class="mb-3">
-        <Field id="confirmPassword" name="confirmPassword" placeholder="Confirmar contraseña"
-          type="password"
-          v-model="datosFormulario.confirmPassword"
-          :rules="reglasConfirmPassword"
-          :class="{ 'is-invalid': errors.confirmPassword }"
-          class="form-control" />
-        <ErrorMessage name="confirmPassword" class="invalid-feedback" />
-      </div>
+            <div class="mt-2">
+              <label for="password" class="form-label text-sm">Contraseña</label>
+              <Password id="password" v-model="datosFormulario.password" class="w-100 text-sm" :toggleMask="true" :feedback="true" :class="{'p-invalid': errors.password}" placeholder="Contraseña" />
+              <small v-if="errors.password" class="p-error">{{ errors.password }}</small>
+            </div>
 
-      <div class="form-check mb-3">
-        <Field name="aceptoTerminos" type="checkbox"
-          v-model="datosFormulario.aceptoTerminos"
-          :value="true"
-          :rules="'requiredCheckbox'"
-          class="form-check-input" />
-        <label for="aceptoTerminos" class="form-check-label">Acepto los términos y condiciones</label>
-        <ErrorMessage name="aceptoTerminos" class="invalid-feedback" />
-      </div>
+          <!-- Botón de Registro -->
+          <Button type="submit" label="Registrarse" class="w-100 p-button-sm mt-3" :loading="isSubmitting" />
 
-      <button
-        type="submit"
-        :disabled="Object.keys(errors).length > 0 || isSubmitting"
-        class="btn btn-primary w-100"
-      >
-        {{ isSubmitting ? 'Enviando...' : 'Enviar' }}
-      </button>
-    </Form>
+          <!-- Mensajes de error del servidor -->
+          <small v-if="mensajesError.length" class="p-error d-block mt-1 text-center text-sm">
+            {{ mensajesError[0].mensaje }}
+          </small>
 
-    <div v-if="mensajeExito" class="alert alert-success mt-3">
-      {{ mensajeExito }}
-    </div>
-    <div v-if="mensajeError" class="alert alert-danger mt-3">
-      {{ mensajeError }}
-    </div>
+          <!-- Mensaje de éxito -->
+          <Message v-if="registroExitoso" severity="success" class="mt-2 text-center text-sm">
+            ¡Registro exitoso!
+          </Message>
+        </form>
+      </template>
+    </Card>
   </div>
 </template>
-
 <script setup>
-import { ref, computed } from 'vue';
-import { Field, Form, ErrorMessage } from 'vee-validate';
-import { email } from '@vee-validate/rules';
-import { defineRule } from 'vee-validate';
-import { useRegistroUsuarioStore } from '../../stores/registerUser';
+import { ref } from 'vue';
+import { useRegistroUsuarioStore } from '@/stores/registerUser';
+import InputText from 'primevue/inputtext';
+import Password from 'primevue/password';
+import Button from 'primevue/button';
+import Message from 'primevue/message';
+import Card from 'primevue/card';
 
-const store = useRegistroUsuarioStore();
+const registroUsuarioStore = useRegistroUsuarioStore();
+const datosFormulario = ref({ nombre: '', apellidos: '', dni: '', email: '', password: '' });
+const mensajesError = ref([]);
+const errors = ref({});
+const isSubmitting = ref(false);
+const registroExitoso = ref(false);
 
-defineRule('required', (value) => {
-  if (!value || value.trim() === '') {
-    return 'Campo obligatorio';
-  }
-  return true;
-});
-
-defineRule('passwordMin', (value) => {
-  if (!value || value.length < 8) {
-    return 'La contraseña debe tener al menos 8 caracteres';
-  }
-  return true;
-});
-
-defineRule('requiredCheckbox', (value) => {
-  if (value !== true) {
-    return 'Debes aceptar los términos y condiciones';
-  }
-  return true;
-});
-
-defineRule('email', (value) => {
-  if (!email(value)) {
-    return 'Correo electrónico no válido';
-  }
-  return true;
-});
-
-defineRule('dni', (value) => {
-  const patronDni = /^[0-9]{8}[A-Za-z]$/;
-  if (!value || value.trim() === '') {
-    return 'El DNI es obligatorio';
-  }
-  if (!patronDni.test(value)) {
-    return 'El DNI no es válido';
-  }
-  return true;
-});
-
-const reglasConfirmPassword = computed(() => {
-  return (value) => {
-    if (!value) {
-      return 'La confirmación de contraseña es obligatoria';
-    }
-    if (value !== datosFormulario.value.password) {
-      return 'Las contraseñas no coinciden';
-    }
-    return true;
-  };
-});
-
-const datosFormulario = ref({
-  name: '',
-  lastName: '',
-  dni: '',
-  email: '',
-  password: '',
-  confirmPassword: '',
-  aceptoTerminos: false
-});
-
-const mensajeExito = ref('');
-const mensajeError = ref('');
-const serverErrors = ref({
-  dni: '',
-  email: ''
-});
-
-const enviarFormulario = async (values, { resetForm, setSubmitting }) => {
-  try {
-    mensajeExito.value = '';
-    mensajeError.value = '';
-    serverErrors.value = { dni: '', email: '' };
-
-    const usuario = {
-      nombre: values.name,
-      apellidos: values.lastName,
-      dni: values.dni,
-      email: values.email,
-      password: values.password,
-    };
-
-    await store.registrarUsuario(usuario);
-
-    if (!store.error) {
-      mensajeExito.value = 'Registrado correctamente';
-      resetForm();
-    } else {
-      handleServerError(store.error);
-    }
-  } catch (error) {
-    console.error('Error en el componente:', error);
-    handleServerError(error);
-  } finally {
-    setSubmitting(false);
-  }
+// Validaciones
+const validarDNI = (dni) => /^[0-9]{8}[A-Z]$/i.test(dni);
+const validarPassword = (password) => {
+  if (password.length > 8) return 'Máximo 8 caracteres';
+  if (!/\d/.test(password)) return 'Debe tener un número';
+  if (!/[A-Z]/.test(password)) return 'Debe tener una mayúscula';
+  return '';
 };
 
-const handleServerError = (error) => {
-  console.log('Error recibido:', error);
+const validarFormulario = () => {
+  errors.value = {};
+  if (!datosFormulario.value.nombre) errors.value.nombre = 'Obligatorio';
+  if (!datosFormulario.value.apellidos) errors.value.apellidos = 'Obligatorio';
+  if (!datosFormulario.value.dni) errors.value.dni = 'Obligatorio';
+  else if (!validarDNI(datosFormulario.value.dni)) errors.value.dni = 'Formato incorrecto';
+  if (!datosFormulario.value.email) errors.value.email = 'Obligatorio';
+  else if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(datosFormulario.value.email)) errors.value.email = 'Correo inválido';
+  if (!datosFormulario.value.password) errors.value.password = 'Obligatorio';
+  else {
+    const errorPassword = validarPassword(datosFormulario.value.password);
+    if (errorPassword) errors.value.password = errorPassword;
+  }
+  return Object.keys(errors.value).length === 0;
+};
 
-  if (error && error.response && error.response.data) {
-    const errorData = error.response.data;
-    console.log('Datos del error:', errorData);
+// Enviar formulario
+const enviarFormulario = async () => {
+  if (!validarFormulario()) return;
+  isSubmitting.value = true;
+  mensajesError.value = [];
+  registroExitoso.value = false;
 
-    if (typeof errorData === 'string') {
-      if (errorData === 'El DNI y el correo ya existen') {
-        serverErrors.value.dni = 'Este DNI ya está registrado';
-        serverErrors.value.email = 'Este correo electrónico ya está registrado';
-      } else if (errorData.toLowerCase().includes('dni')) {
-        serverErrors.value.dni = 'Este DNI ya está registrado';
-      } else if (errorData.toLowerCase().includes('correo')) {
-        serverErrors.value.email = 'Este correo electrónico ya está registrado';
+  try {
+    await registroUsuarioStore.registrarUsuario({
+      nombre: datosFormulario.value.nombre,
+      apellidos: datosFormulario.value.apellidos,
+      dni: datosFormulario.value.dni.toUpperCase(),
+      email: datosFormulario.value.email,
+      password: datosFormulario.value.password
+    });
+
+    registroExitoso.value = true;
+    datosFormulario.value = { nombre: '', apellidos: '', dni: '', email: '', password: '' };
+  } catch (error) {
+    if (error.response) {
+      const statusCode = error.response.status;
+      if (statusCode === 400) {
+        const errorMsg = error.response.data;
+        if (typeof errorMsg === 'string') {
+          if (errorMsg.includes('DNI')) mensajesError.value.push({ mensaje: 'DNI ya registrado.' });
+          else if (errorMsg.includes('email')) mensajesError.value.push({ mensaje: 'Correo ya registrado.' });
+          else mensajesError.value.push({ mensaje: errorMsg });
+        } else {
+          mensajesError.value.push({ mensaje: 'Error de validación.' });
+        }
+      } else if (statusCode === 500) {
+        mensajesError.value.push({ mensaje: 'Error del servidor.' });
       } else {
-        mensajeError.value = errorData;
+        mensajesError.value.push({ mensaje: 'Error en el registro.' });
       }
-    } else if (typeof errorData === 'object') {
-      if (errorData.dni) {
-        serverErrors.value.dni = errorData.dni;
-      }
-      if (errorData.email) {
-        serverErrors.value.email = errorData.email;
-      }
-      if (!serverErrors.value.dni && !serverErrors.value.email) {
-        mensajeError.value = 'Error en el registro. Por favor, revise los datos e intente nuevamente.';
-      }
+    } else {
+      mensajesError.value.push({ mensaje: 'Error de conexión.' });
     }
-  } else {
-    mensajeError.value = 'Ocurrió un error al procesar la solicitud. Por favor, inténtelo de nuevo.';
+  } finally {
+    isSubmitting.value = false;
   }
 };
 </script>
 
 <style scoped>
-.formulario {
-  max-width: 500px;
-  margin: 0 auto;
+.text-sm {
+  font-size: 0.85rem;
 }
 
-.alert {
+.p-error {
+  font-size: 0.75rem;
+  color: #f44336;
+}
+button {
+  border-radius: 4px;
+  padding: 8px 12px;
+}
+
+.mt-2 {
+  margin-top: 0.75rem;
+}
+
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
+
+.text-center {
   text-align: center;
 }
 
-.invalid-feedback {
-  display: block;
+.d-flex {
+  display: flex;
+}
+
+.gap-2 {
+  gap: 0.5rem;
+}
+
+.w-50 {
+  width: 50%;
 }
 </style>
 

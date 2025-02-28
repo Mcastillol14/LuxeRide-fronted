@@ -44,7 +44,7 @@ import { ref, computed } from 'vue';
 import usuarioDashboard from './usuarioDashboard.vue';
 import licenciasDashboard from './licenciasDashboard.vue';
 import serviciosDashboard from './serviciosDashboard.vue';
-
+import cochesDashboard from './cochesDashboard.vue';
 const opcionDefault = ref("usuario");
 const sidebarAbierta = ref(true);
 
@@ -52,6 +52,8 @@ const menu = [
   { id: "usuario", nombre: "Usuarios", componente: usuarioDashboard },
   { id: "licencias", nombre: "Licencias", componente: licenciasDashboard },
   { id: "servicios", nombre: "Servicios", componente: serviciosDashboard },
+  { id: "coches", nombre: "Coches", componente: cochesDashboard },
+
 ];
 
 const componenteActual = computed(() => {

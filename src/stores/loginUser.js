@@ -32,5 +32,11 @@ export const useLoginUsuarioStore = defineStore('datos', {
         this.cargando = false;
       }
     },
+
+    logoutUsuario() {
+      this.usuario = null;
+      this.token = null;
+      localStorage.removeItem('token');
+    }
   },
 });

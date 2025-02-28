@@ -10,6 +10,9 @@
     "lint": "eslint . --fix"
   },
   "dependencies": {
+    "@popperjs/core": "^2.11.8",
+    "@primeuix/themes": "^1.0.0",
+    "@primevue/themes": "^4.3.1",
     "@vee-validate/rules": "^4.15.0",
     "@vee-validate/yup": "^4.15.0",
     "aos": "^2.3.4",
@@ -21,10 +24,13 @@
     "lodash": "^4.17.21",
     "pinia": "^2.3.0",
     "pinia-plugin-persistedstate": "^4.2.0",
+    "primeicons": "^7.0.0",
+    "primevue": "^3.53.1",
     "vee-validate": "^4.15.0",
     "vue": "^3.5.13",
     "vue-router": "^4.5.0",
-    "vue3-carousel": "^0.13.0"
+    "vue3-carousel": "^0.13.0",
+    "yup": "^1.6.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.14.0",

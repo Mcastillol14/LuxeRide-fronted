@@ -12,24 +12,25 @@
       </div>
     </div>
     <div class="table-responsive">
-      <table class="table table-striped table-hover table-bordered shadow-sm rounded" style="table-layout: fixed;">
+      <table class="table table-striped table-hover table-bordered shadow-sm rounded">
         <thead class="table-dark">
         <tr>
           <th>Id</th>
           <th>Numero</th>
-          <th style="width: 140px;">Acciones</th>
+          <th style="width: 140px">Acciones</th>
         </tr>
         </thead>
         <tbody>
         <tr v-for="licencia in licencias" :key="licencia.id">
-          <td>{{ licencia.id }}</td>
+          <td class="id-column">{{ licencia.id }}</td>
           <td>{{ licencia.numero }}</td>
-          <td>
-            <button class="btn-control btn btn-outline-primary btn-sm rounded-pill"
+          <td class="text-center">
+            <button class="btn-control btn btn-outline-primary btn-sm rounded-pill mx-1"
                     @click="abrirModalEdicion(licencia)">
               <i class="bi bi-pencil"></i>
             </button>
-            <button class="btn-control btn btn-outline-danger btn-sm rounded-pill" @click="deleteLicenciaMarcada(licencia.id)">
+            <button class="btn-control btn btn-outline-danger btn-sm rounded-pill mx-1"
+                    @click="deleteLicenciaMarcada(licencia.id)">
               <i class="bi bi-trash"></i>
             </button>
           </td>
@@ -100,6 +101,7 @@
 
   </section>
 </template>
+
 <script setup>
 import {ref, onMounted, computed} from 'vue'
 import {useListadoLicenciasStore} from '@/stores/admin/listadoLicencias';
@@ -113,13 +115,9 @@ const addLicenciaStore = useAddLicenciaStore();
 const editarLicenciaStore = useEditarLicenciaStore();
 const deleteLicenciaStore = useDeleteLicenciaStore();
 
-
-
 const numero = ref("")
 const licencias = computed(() => listadoLicenciasStore.licencias)
-const nuevaLicencia = ref({
-  numero: '',
-})
+const nuevaLicencia = ref({numero: '',})
 const mostrarModal = ref(false)
 const mostrarModalEdicion = ref(false)
 const mensaje = ref('')
@@ -176,9 +174,9 @@ const registrarLicenciaNueva = async () => {
     mensaje.value = 'Licencia registrada correctamente';
     mensajeTipo.value = 'success';
     await refrescarTabla();
-    setTimeout(()=>{
+    setTimeout(() => {
       cerrarModalAdd();
-    },1000)
+    }, 1000)
   } catch (error) {
     if (error.response && error.response.status === 400) {
       mensaje.value = 'El número de licencia ya existe';
@@ -193,7 +191,6 @@ const abrirModalEdicion = (licencia) => {
   licenciaEditada.value = {...licencia};
   mostrarModalEdicion.value = true;
 }
-
 
 const cerrarModal = () => {
   licenciaEditada.value = null;
@@ -215,9 +212,9 @@ const guardarEdicionLicencia = async () => {
       numero: licenciaEditada.value.numero
     });
     await refrescarTabla();
-    setTimeout(()=>{
+    setTimeout(() => {
       cerrarModal();
-    },1000)
+    }, 1000)
   } catch (error) {
     console.error('Error al editar la licencia:', error);
   }
@@ -226,9 +223,8 @@ const deleteLicenciaMarcada = async (id) => {
   await deleteLicenciaStore.deleteLicencia(id);
   await refrescarTabla();
 }
-
-
 </script>
+
 <style scoped>
 .modal-overlay {
   position: fixed;
@@ -240,6 +236,10 @@ const deleteLicenciaMarcada = async (id) => {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.table-responsive {
+  overflow-x: auto;
 }
 
 .modal-container {
@@ -267,12 +267,5 @@ const deleteLicenciaMarcada = async (id) => {
   cursor: pointer;
 }
 
-.btn-control {
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-inline: 2px;
-}
+
 </style>

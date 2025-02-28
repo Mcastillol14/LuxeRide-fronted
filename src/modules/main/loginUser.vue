@@ -1,119 +1,175 @@
 <template>
   <div class="container py-5">
-    <h1 class="text-center mb-4">Iniciar Sesión</h1>
+    <Card class="p-4 shadow-sm mx-auto" style="max-width: 400px;">
+      <template #content>
+        <form @submit.prevent="enviarFormulario" aria-label="Formulario de inicio de sesión">
+          <!-- Correo Electrónico -->
+          <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <InputText
+              id="email"
+              v-model="datosFormulario.email"
+              class="w-100 p-inputtext-sm"
+              :class="{'p-invalid': errors.email}"
+              placeholder="Email"
+              aria-describedby="email-help"
+            />
+            <small v-if="errors.email" class="p-error" id="email-help">{{ errors.email }}</small>
+          </div>
 
-    <Form @submit="enviarFormulario" v-slot="{ errors, isSubmitting }" class="formulario">
-      <div class="mb-3">
-        <Field id="email" name="email" type="email" placeholder="Correo electrónico" v-model="datosFormulario.email"
-          :rules="'required|email'" :class="{ 'is-invalid': errors.email }" class="form-control" />
-        <ErrorMessage name="email" class="invalid-feedback" />
-      </div>
+          <!-- Contraseña -->
+          <div class="mb-3">
+            <label for="password" class="form-label">Contraseña</label>
+            <Password
+              id="password"
+              v-model="datosFormulario.passwordLogin"
+              placeholder="Contraseña"
+              :toggleMask="false"
+              :feedback="false"
+              inputClass="w-100"
+              class="w-100"
+              :class="{'p-invalid': errors.passwordLogin}"
+              aria-describedby="password-help"
+            />
+            <small v-if="errors.passwordLogin" class="p-error" id="password-help">{{ errors.passwordLogin }}</small>
+          </div>
 
-      <div class="mb-3">
-        <Field id="passwordLogin" name="passwordLogin" type="password" placeholder="Contraseña"
-          v-model="datosFormulario.passwordLogin" :rules="'required'" :class="{ 'is-invalid': errors.passwordLogin }"
-          class="form-control" />
-        <ErrorMessage name="passwordLogin" class="invalid-feedback" />
-      </div>
+          <!-- Botón de Enviar -->
+          <Button
+            type="submit"
+            label="Iniciar sesión"
+            class="w-100 p-button-sm"
+            :loading="isSubmitting"
+            aria-live="polite"
+          />
+        </form>
+      </template>
+    </Card>
 
-      <button type="submit" :disabled="Object.keys(errors).length > 0 || isSubmitting" class="btn btn-primary w-100">
-        {{ isSubmitting ? 'Iniciando...' : 'Iniciar sesión' }}
-      </button>
-    </Form>
-
-    <div v-if="mensajeError" class="alert alert-danger mt-3">
-      {{ mensajeError }}
-    </div>
+    <!-- Mensaje de Error -->
+    <small v-if="mensajeError" class="error-message">{{ mensajeError }}</small>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
-import { Field, Form, ErrorMessage } from 'vee-validate';
-import { defineRule } from 'vee-validate';
-import { email } from '@vee-validate/rules';
 import { useLoginUsuarioStore } from '@/stores/loginUser';
 import router from '@/router';
+import InputText from 'primevue/inputtext';
+import Password from 'primevue/password';
+import Button from 'primevue/button';
+import Message from 'primevue/message';
+import Card from 'primevue/card';
 
 const storeLogin = useLoginUsuarioStore();
-const datosFormulario = ref({
-  email: '',
-  passwordLogin: ''
-});
-
-defineRule('required', (value) => (!value || value.trim() === '' ? 'Campo obligatorio' : true));
-defineRule('email', (value) => (email(value) ? true : 'Correo electrónico no válido'));
-
+const datosFormulario = ref({ email: '', passwordLogin: '' });
 const mensajeError = ref('');
+const errors = ref({});
+const isSubmitting = ref(false);
 
+// Validación del formulario
+const validarFormulario = () => {
+  errors.value = {};
+  if (!datosFormulario.value.email) {
+    errors.value.email = 'El correo es obligatorio';
+  } else if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(datosFormulario.value.email)) {
+    errors.value.email = 'Correo electrónico no válido';
+  }
+  if (!datosFormulario.value.passwordLogin) {
+    errors.value.passwordLogin = 'La contraseña es obligatoria';
+  }
+  return Object.keys(errors.value).length === 0;
+};
 
-const enviarFormulario = async (values, { resetForm, setSubmitting }) => {
+// Función para enviar el formulario
+const enviarFormulario = async () => {
+  if (!validarFormulario()) return;
+
+  isSubmitting.value = true;
+  mensajeError.value = '';
   try {
-    mensajeError.value = '';
-
-    const usuario = {
-      email: values.email,
-      password: values.passwordLogin
-    };
-
-    await storeLogin.loginUsuario(usuario);
+    await storeLogin.loginUsuario({
+      email: datosFormulario.value.email,
+      password: datosFormulario.value.passwordLogin
+    });
 
     if (!storeLogin.error) {
-      resetForm();
       localStorage.setItem('token', storeLogin.token);
       router.push('/home');
     } else {
-      errorServidor(storeLogin.error);
+      mensajeError.value = storeLogin.error;
     }
   } catch (error) {
-    console.error('Error en el inicio de sesión:', error);
-    errorServidor(error);
-  } finally {
-    setSubmitting(false);
-  }
-};
-
-const errorServidor = (error) => {
-  console.log('Error recibido:', error);
-
-  if (error.response) {
-    const status = error.response.status;
-    const message = error.response.data.message;
-
-    if (status === 401) {
-      if (message === 'Usuario no encontrado') {
-        mensajeError.value = 'Email no registrado';
-      } else if (message === 'Tu cuenta está bloqueada. Contacta con el soporte') {
-        mensajeError.value = 'Tu cuenta está bloqueada. Contacta con el soporte';
-      } else {
-        mensajeError.value = 'Error desconocido. Inténtelo nuevamente.';
-      }
-    } else if (status === 500) {
-      mensajeError.value = 'Contraseña incorrecta';
+    if (error.response && error.response.status === 401) {
+      mensajeError.value = 'Correo o contraseña incorrectos.';
     } else {
-      mensajeError.value = 'Error desconocido. Inténtelo nuevamente.';
+      mensajeError.value = 'Error en la conexión con el servidor.';
     }
-  } else {
-    mensajeError.value = 'Error en la conexión con el servidor.';
+    console.error(error);
+  } finally {
+    isSubmitting.value = false;
   }
 };
+
 </script>
 
 <style scoped>
-.formulario {
-  max-width: 400px;
-  margin: 0 auto;
+.p-inputtext-sm, .p-button-sm {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 14px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
 }
 
-.alert {
+/* Estilo para el campo inválido */
+.p-invalid {
+  border-color: #f44336;
+  background-color: #ffe6e6;
+}
+
+/* Estilo para los errores */
+.p-error {
+  font-size: 0.75rem;
+  color: #f44336;
+  margin-top: 5px;
+}
+
+.mt-3 {
+  margin-top: 1rem;
+}
+
+.text-center {
   text-align: center;
 }
 
-.invalid-feedback {
-  display: block;
+.card {
+  background-color: #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
 }
 
-.is-invalid {
-  border-color: #dc3545;
+:deep(.p-password-panel) {
+  margin-top: 5px;
+}
+
+button:disabled {
+  background-color: #dcdcdc;
+}
+
+button:disabled:hover {
+  background-color: #dcdcdc;
+}
+
+/* Asegura que los inputs tengan suficiente espacio */
+input, button {
+  border-radius: 4px;
+  padding: 8px 12px;
+}
+.error-message {
+  display: block;
+  color: #f44336;
+  font-size: 0.8rem;
+  text-align: center;
+  margin-top: 5px;
 }
 </style>
