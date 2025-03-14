@@ -1,6 +1,7 @@
 import {defineStore} from "pinia";
 import axios from "axios";
 import {useLoginAdminStore} from "../loginAdmin";
+import {API_URL} from "@/constants.js";
 
 export const useDeleteLicenciaStore = defineStore("deleteLicencia", {
   state: () => ({
@@ -19,12 +20,14 @@ export const useDeleteLicenciaStore = defineStore("deleteLicencia", {
       this.mensaje = null;
 
       if (!token) {
+        this.error = "Token no disponible";
+        console.error("Token no disponible");
         this.cargando = false;
-        throw new Error("Token no disponible");
+        return;
       }
 
       try {
-        await axios.delete(`http://localhost:8080/api/admin/deleteLicencia/${id}`, {
+        await axios.delete(`${API_URL}/api/admin/deleteLicencia/${id}`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,

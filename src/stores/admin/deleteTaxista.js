@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useLoginAdminStore } from "../loginAdmin";
 import { defineStore } from "pinia";
+import {API_URL} from "@/constants.js";
 
 export const useDeleteTaxistaStore = defineStore("deleteTaxista", {
   state: () => ({
@@ -23,7 +24,7 @@ export const useDeleteTaxistaStore = defineStore("deleteTaxista", {
       }
 
       try {
-        const response = await axios.put(`http://localhost:8080/api/admin/deleteTaxista/${id}`,null, {
+        const response = await axios.put(`${API_URL}/api/admin/deleteTaxista/${id}`,null, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,

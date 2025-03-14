@@ -7,7 +7,7 @@
     </main>
 
     <modalUser
-      v-if="userData"
+      v-if="isProfileVisible"
       v-model="isProfileVisible"
       :userData="userData"
       @hide="handleHideModal"
@@ -16,55 +16,77 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted} from 'vue';
 import { useUsuarioStore } from '@/stores/Usuario/infoUser.js';
-import {useLoginUsuarioStore} from "@/stores/loginUser.js";
+import { useLoginUsuarioStore } from "@/stores/loginUser.js";
 import headerUser from './headerUser.vue';
 import heroUser from './heroUser.vue';
 import noticiasUser from './noticiasUser.vue';
 import modalUser from './modalUser.vue';
 import router from "@/router/index.js";
 
-
 const isProfileVisible = ref(false);
 const userData = ref(null);
 
 const usuarioStore = useUsuarioStore();
-const cerrarSesion=useLoginUsuarioStore();
-
+const cerrarSesion = useLoginUsuarioStore();
 
 const loadUserDataFromStorage = () => {
   const storedData = localStorage.getItem('userData');
   if (storedData) {
-    userData.value = JSON.parse(storedData);
-    console.log('Datos cargados desde localStorage:', userData.value);
+    try {
+      userData.value = JSON.parse(storedData);
+      console.log('Datos cargados desde localStorage:', userData.value);
+    } catch (error) {
+      console.error('Error al parsear datos de localStorage:', error);
+      localStorage.removeItem('userData');
+    }
   }
 };
 
 const saveUserDataToStorage = (data) => {
-  localStorage.setItem('userData', JSON.stringify(data));
-  console.log('Datos guardados en localStorage');
+  if (data && typeof data === 'object') {
+    localStorage.setItem('userData', JSON.stringify(data));
+      console.log('Datos guardados en localStorage:', data);
+  } else {
+    console.error('Intentando guardar datos inválidos en localStorage:', data);
+  }
 };
 
 const showUserProfile = async () => {
   try {
-    if (userData.value) {
+    // Si ya tenemos datos y el ID está presente, mostrar el modal directamente
+    if (userData.value && userData.value.id) {
+      console.log('Usando datos existentes con ID:', userData.value.id);
       isProfileVisible.value = true;
       return;
     }
 
+    // Si no tenemos datos o falta el ID, obtener datos frescos
+    console.log('Obteniendo datos frescos del usuario');
     await usuarioStore.obtenerInfoUsuario();
 
+    // Verificar que tenemos un ID después de la llamada a la API
+    console.log('ID obtenido del store:', usuarioStore.id);
+
     if (usuarioStore.nombre) {
+      // Crear objeto userData asegurando que el ID esté incluido
       userData.value = {
+        id: usuarioStore.id, // Asegurarse de que el ID esté primero para depuración
         nombre: usuarioStore.nombre,
         apellidos: usuarioStore.apellidos,
         dni: usuarioStore.dni,
-        email: usuarioStore.email,
+        email: usuarioStore.email
       };
 
-      saveUserDataToStorage(userData.value);
+      // Verificar que el objeto userData tiene un ID
+      if (userData.value.id === undefined || userData.value.id === null) {
+        console.warn('El ID es null o undefined después de asignarlo desde el store');
+      } else {
+        console.log('ID asignado correctamente a userData:', userData.value.id);
+      }
 
+      saveUserDataToStorage(userData.value);
       isProfileVisible.value = true;
     } else {
       console.error('Los datos del usuario no están disponibles en el store');
@@ -81,22 +103,21 @@ const handleHideModal = () => {
 };
 
 const handleLogout = () => {
-  cerrarSesion.logoutUsuario()
+  cerrarSesion.logoutUsuario();
   localStorage.removeItem('userData');
   router.push('/');
   userData.value = null;
 };
 
 const navigateToBooking = () => {
-  router.push("/trip")
+  router.push("/trip");
 };
 
 onMounted(() => {
-  console.log('Componente principal montado');
-  loadUserDataFromStorage(); // Cargar datos al montar el componente
+  loadUserDataFromStorage();
 });
 </script>
 
 <style scoped>
-/* Estilos adicionales si son necesarios */
+
 </style>

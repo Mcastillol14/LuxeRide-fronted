@@ -10,7 +10,7 @@
               Nuestra línea de taxis eléctricos de alta gama ofrece una experiencia de viaje inigualable,
               reduciendo la huella de carbono sin comprometer el confort y la elegancia.
             </p>
-            <button @click="openModal('login')" class="btn btn-primary btn-lg mb-3">Acceder</button>
+            <button @click="openModal('login')" class="btn btn-success btn-lg mb-3">Acceder</button>
           </div>
         </div>
       </div>
@@ -21,28 +21,28 @@
         <div class="row g-4">
           <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="100">
             <div class="feature-card text-center">
-              <i class="bi bi-lightning-charge display-4 text-primary mb-3"></i>
+              <i class="bi bi-lightning-charge display-4 text-success mb-3"></i>
               <h3 class="h5 mb-3">Viajes Eléctricos</h3>
               <p>Disfruta de un viaje silencioso y ecológico en nuestra línea 100% eléctrica.</p>
             </div>
           </div>
           <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="200">
             <div class="feature-card text-center">
-              <i class="bi bi-star display-4 text-primary mb-3"></i>
+              <i class="bi bi-star display-4 text-success mb-3"></i>
               <h3 class="h5 mb-3">Lujo Personalizado</h3>
               <p>Experimenta un servicio a medida que se adapta a tus preferencias personales.</p>
             </div>
           </div>
           <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="300">
             <div class="feature-card text-center">
-              <i class="bi bi-shield-check display-4 text-primary mb-3"></i>
+              <i class="bi bi-shield-check display-4 text-success mb-3"></i>
               <h3 class="h5 mb-3">Seguridad Primero</h3>
               <p>Viaja con tranquilidad gracias a nuestros rigurosos protocolos de seguridad.</p>
             </div>
           </div>
           <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="400">
             <div class="feature-card text-center">
-              <i class="bi bi-clock-history display-4 text-primary mb-3"></i>
+              <i class="bi bi-clock-history display-4 text-success mb-3"></i>
               <h3 class="h5 mb-3">Puntualidad Garantizada</h3>
               <p>Optimizamos cada ruta para asegurar que llegues a tiempo a tu destino.</p>
             </div>
@@ -109,7 +109,7 @@
             <carousel :items-to-show="1" :wrap-around="true" :autoplay="5000" class="testimonial-carousel">
               <slide v-for="testimonial in testimonials" :key="testimonial.id">
                 <div class="testimonial-item text-center p-4">
-                  <i :class="testimonial.icon + ' display-1 mb-3 text-primary'"></i>
+                  <i :class="testimonial.icon + ' display-1 mb-3 text-success'"></i>
                   <p class="testimonial-text mb-3">"{{ testimonial.text }}"</p>
                   <h4 class="testimonial-name h6 mb-1">{{ testimonial.name }}</h4>
                   <p class="testimonial-position text-muted small">{{ testimonial.position }}</p>
@@ -120,7 +120,7 @@
         </div>
       </div>
     </section>
-    <section class="slogan bg-primary text-white py-5">
+    <section class="slogan bg-success text-white py-5">
       <div class="container text-center">
         <h2 class="mb-4 fw-bold" data-aos="fade-up">No viajes. Teletranspórtate con estilo.</h2>
         <p class="lead mb-4" data-aos="fade-up" data-aos-delay="100">LuxeRide: Donde el futuro del transporte se

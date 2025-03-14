@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useLoginAdminStore } from "../loginAdmin";
 import { defineStore } from "pinia";
+import {API_URL} from "@/constants.js";
 
 export const useBloquearCuentaStore = defineStore("bloquearCuenta", {
   state: () => ({
@@ -23,7 +24,7 @@ export const useBloquearCuentaStore = defineStore("bloquearCuenta", {
       }
 
       try {
-        const response = await axios.put(`http://localhost:8080/api/admin/bloquearCuenta/${id}`, null, {
+        const response = await axios.put(`${API_URL}/api/admin/bloquearCuenta/${id}`, null, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,

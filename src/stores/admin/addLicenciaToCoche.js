@@ -1,9 +1,9 @@
-import { defineStore } from "pinia";
-import axios from "axios";
-import { useLoginAdminStore } from "../loginAdmin";
+import { defineStore } from "pinia"
+import axios from "axios"
+import { useLoginAdminStore } from "../loginAdmin"
 import {API_URL} from "@/constants.js";
 
-export const useAddServicioStore = defineStore("addServicio", {
+export const useAddLicenciaToCoche = defineStore("addLicenciaToCoche", {
   state: () => ({
     cargando: false,
     error: null,
@@ -11,8 +11,7 @@ export const useAddServicioStore = defineStore("addServicio", {
   }),
 
   actions: {
-    async addServicio(servicio) {
-
+    async addLicenciaToCoche(cocheId, licenciaId) {
       const loginStore = useLoginAdminStore()
       const token = loginStore.token
       this.cargando = true
@@ -25,17 +24,18 @@ export const useAddServicioStore = defineStore("addServicio", {
         this.cargando = false;
         return;
       }
+
       try {
-        await axios.post(`${API_URL}/api/admin/addServicio`, servicio, {
+        await axios.put(`${API_URL}/${cocheId}/${licenciaId}`, null, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-        });
-        this.mensaje = "Servicio registrado con éxito"
+        })
+        this.mensaje = "Licencia asignada al coche con éxito"
       } catch (error) {
-        this.error=error.response?error.response.data.error : error.message;
-        throw error;
+        this.error = error.response ? error.response.data.error : error.message
+        throw error
       } finally {
         this.cargando = false
       }

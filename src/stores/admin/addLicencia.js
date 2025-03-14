@@ -1,6 +1,7 @@
 import { defineStore } from "pinia"
 import axios from "axios"
 import { useLoginAdminStore } from "../loginAdmin"
+import {API_URL} from "@/constants.js";
 
 export const useAddLicenciaStore = defineStore("addLicencia", {
   state: () => ({
@@ -17,11 +18,14 @@ export const useAddLicenciaStore = defineStore("addLicencia", {
       this.mensaje = null
 
       if (!token) {
-        throw new Error("Token no disponible")
+        this.error = "Token no disponible";
+        console.error("Token no disponible");
+        this.cargando = false;
+        return;
       }
 
       try {
-        await axios.post("http://localhost:8080/api/admin/addLicencia", licencia, {
+        await axios.post(`${API_URL}/api/admin/addLicencia`, licencia, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,

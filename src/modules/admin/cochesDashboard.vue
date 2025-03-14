@@ -21,7 +21,6 @@
           <th>Matricula</th>
           <th>Licencia</th>
           <th>Usuarios</th>
-          <th>Estado</th>
           <th>Disponible</th>
           <th>Acciones</th>
         </tr>
@@ -32,13 +31,12 @@
           <td>{{ coche.modelo }}</td>
           <td>{{ coche.marca }}</td>
           <td>{{ coche.matricula }}</td>
-          <td>{{ coche.licencia ? coche.licencia : 'Sin licencia asignada' }}</td>
-          <td>{{ coche.usuario ? coche.usuario : 'Sin usuarios asignados' }}</td>
+          <td>{{ coche.licencia ? coche.licencia.numero : 'Sin licencia asignada' }}</td>
           <td>
-            <span :class="coche.estado ? 'text-success' : 'text-danger'">
-              <i :class="coche.estado ? 'bi bi-check-circle' : 'bi bi-x-circle'"></i>
-              {{ coche.estado ? 'Activo' : 'Desactivado' }}
+            <span v-if="coche.usuarios && coche.usuarios.length > 0">
+              {{ coche.usuarios.map(u => `${u.nombre} ${u.apellidos}`).join(', ') }}
             </span>
+            <span v-else>Sin usuarios asignados</span>
           </td>
           <td>
             <span :class="coche.disponible ? 'text-success' : 'text-danger'">
@@ -97,7 +95,16 @@
             </div>
             <div class="mb-3">
               <label>Matrícula</label>
-              <input v-model="nuevoCoche.matricula" type="text" class="form-control" required>
+              <input v-model="nuevoCoche.matricula" type="text" class="form-control" required
+                     placeholder="Formato: 1234 ABC">
+              <small v-if="mensajeError" class="text-danger">{{ mensajeError }}</small>
+            </div>
+            <div class="mb-3">
+              <label>Estado</label>
+              <select v-model="nuevoCoche.estado" class="form-select" required>
+                <option :value="true">Activo</option>
+                <option :value="false">Desactivado</option>
+              </select>
             </div>
             <button type="submit" class="btn btn-primary mt-3">Añadir Coche</button>
           </form>
@@ -115,12 +122,9 @@
         <div class="modal-body">
           <form @submit.prevent="addLicenciaToCoche">
             <div class="mb-3">
-              <label>Número licencia</label>
-              <select v-model="licenciaSeleccionada" class="form-select" required>
-                <option v-for="licencia in licenciasDisponibles" :key="licencia.id" :value="licencia.id">
-                  {{ licencia.numero }}
-                </option>
-              </select>
+              <label>ID de Licencia</label>
+              <input v-model="licenciaSeleccionada" type="number" class="form-control" required min="1"
+                     placeholder="Introduce el ID de la licencia">
             </div>
             <button type="submit" class="btn btn-primary mt-3">Añadir</button>
           </form>
@@ -138,12 +142,9 @@
         <div class="modal-body">
           <form @submit.prevent="addUsuarioToCoche">
             <div class="mb-3">
-              <label>Usuario</label>
-              <select v-model="usuarioSeleccionado" class="form-select" required>
-                <option v-for="usuario in usuariosDisponibles" :key="usuario.id" :value="usuario.id">
-                  {{ usuario.nombre }} {{ usuario.apellidos }}
-                </option>
-              </select>
+              <label>ID de Usuario</label>
+              <input v-model="usuarioSeleccionado" type="number" class="form-control" required min="1"
+                     placeholder="Introduce el ID del usuario">
             </div>
             <button type="submit" class="btn btn-primary mt-3">Añadir Usuario</button>
           </form>
@@ -161,12 +162,9 @@
         <div class="modal-body">
           <form @submit.prevent="deleteUsuarioFromCoche">
             <div class="mb-3">
-              <label>Usuario</label>
-              <select v-model="usuarioAEliminar" class="form-select" required>
-                <option v-for="usuario in usuariosCoche" :key="usuario.id" :value="usuario.id">
-                  {{ usuario.nombre }} {{ usuario.apellidos }}
-                </option>
-              </select>
+              <label>ID de Usuario</label>
+              <input v-model="usuarioAEliminar" type="number" class="form-control" required min="1"
+                     placeholder="Introduce el ID del usuario a eliminar">
             </div>
             <button type="submit" class="btn btn-danger mt-3">Eliminar Usuario</button>
           </form>
@@ -174,6 +172,11 @@
       </div>
     </div>
 
+    <!-- Alerta de mensajes -->
+    <div v-if="mensaje" :class="`alert alert-${mensajeTipo} position-fixed bottom-0 end-0 m-3`" style="z-index: 1050;">
+      {{ mensaje }}
+      <button type="button" class="btn-close ms-2" @click="mensaje = ''"></button>
+    </div>
   </section>
 </template>
 
@@ -181,16 +184,16 @@
 import {ref, onMounted, computed} from 'vue';
 import {useListadoCochesStore} from '@/stores/admin/listadoCoches';
 import {useAddCocheStore} from "@/stores/admin/addCoche";
-import {useAddLicenciaStore} from '@/stores/admin/addLicencia';
-import {useAddUsuarioStore} from '@/stores/admin/addUsuario';
-import {useDeleteUsuarioStore} from '@/stores/admin/deleteUsuario';
+import {useAddLicenciaToCoche} from '@/stores/admin/addLicenciaToCoche';
+import {useAddUsuarioToCoche} from '@/stores/admin/addUsuarioToCoche';
+import {useDeleteUsuarioToCoche} from '@/stores/admin/deleteUsuarioFromCoche.js';
 import debounce from 'lodash/debounce';
 
 const listadoCochesStore = useListadoCochesStore();
 const addCocheStore = useAddCocheStore();
-const addLicenciaStore = useAddLicenciaStore();
-const addUsuarioStore = useAddUsuarioStore();
-const deleteUsuarioStore = useDeleteUsuarioStore();
+const addLicenciaToCocheStore = useAddLicenciaToCoche();
+const AddUsuarioToCoche = useAddUsuarioToCoche();
+const deleteUsuarioFromCocheStore = useDeleteUsuarioToCoche();
 
 const matricula = ref('');
 const coches = computed(() => listadoCochesStore.coches);
@@ -198,16 +201,14 @@ const mostrarModalNuevoCoche = ref(false);
 const mostrarModalLicencia = ref(false);
 const mostrarModalAddUsuario = ref(false);
 const mostrarModalDeleteUsuario = ref(false);
-const nuevoCoche = ref({modelo: '', marca: '', matricula: ''});
+const nuevoCoche = ref({modelo: '', marca: '', matricula: '', estado: true, disponible: false});
 const licenciaSeleccionada = ref('');
 const usuarioSeleccionado = ref('');
 const usuarioAEliminar = ref('');
 const cocheSeleccionado = ref(null);
-const licenciasDisponibles = ref([]);
-const usuariosDisponibles = ref([]);
-const usuariosCoche = ref([]);
-const mensaje = ref('')
-const mensajeTipo = ref('')
+const mensaje = ref('');
+const mensajeTipo = ref('');
+const mensajeError = ref('');
 
 const filtraMatricula = debounce(async () => {
   await listadoCochesStore.obtenerListadoCoches(0, matricula.value);
@@ -223,6 +224,7 @@ const cambiarPagina = async (pagina) => {
       await listadoCochesStore.obtenerListadoCoches(pagina, matricula.value);
     } catch (error) {
       console.log('Error al cambiar de página', error);
+      mostrarMensaje('Error al cambiar de página', 'danger');
     }
   }
 };
@@ -231,35 +233,43 @@ const abrirModalNuevoCoche = () => {
   mostrarModalNuevoCoche.value = true;
   mensaje.value = '';
   mensajeTipo.value = '';
+  mensajeError.value = '';
+  nuevoCoche.value = {modelo: '', marca: '', matricula: '', estado: true, disponible: false};
 };
 
 const cerrarModalNuevoCoche = () => {
   mostrarModalNuevoCoche.value = false;
-  nuevoCoche.value = {modelo: '', marca: '', matricula: ''};
+  nuevoCoche.value = {modelo: '', marca: '', matricula: '', estado: true, disponible: false};
+  mensajeError.value = '';
+};
+
+const validarMatricula = (matricula) => {
+  const matriculaRegex = /^[0-9]{4} [A-Z]{3}$/;
+  return matriculaRegex.test(matricula);
 };
 
 const addNuevoCoche = async () => {
-  const matriculaRegex = /^[0-9]{4} [A-Z]{3}$/;
-    if(!matriculaRegex.test(nuevoCoche.value.matricula)){
-      mensaje.value = 'El formato de la matricula es incorrecto. Por ejemplo, 1234 BBB';
-      mensajeTipo.value = 'danger';
-      return
-    }
+  mensajeError.value = '';
+
+  if (!validarMatricula(nuevoCoche.value.matricula)) {
+    mensajeError.value = 'El formato de la matrícula debe ser 4 números seguidos de un espacio y 3 letras mayúsculas (Ej: 1234 ABC)';
+    return;
+  }
+
   try {
     await addCocheStore.addCoche(nuevoCoche.value);
-    mensaje.value = 'Coche registrado correctamente';
-    mensaje.value = 'success';
-
+    mostrarMensaje('Coche registrado correctamente', 'success');
+    cerrarModalNuevoCoche();
     await refrescarTabla();
   } catch (error) {
     console.error('Error al añadir nuevo coche', error);
+    mostrarMensaje('Error al añadir el coche: ' + (error.response?.data?.error || error.message), 'danger');
   }
 };
 
 const abrirModalAddLicencia = async (coche) => {
   cocheSeleccionado.value = coche;
-  // Aquí deberías cargar las licencias disponibles
-  // licenciasDisponibles.value = await obtenerLicenciasDisponibles();
+  licenciaSeleccionada.value = '';
   mostrarModalLicencia.value = true;
 };
 
@@ -270,18 +280,19 @@ const cerrarModalLicencia = () => {
 
 const addLicenciaToCoche = async () => {
   try {
-    await addLicenciaStore.addLicenciaToCoche(cocheSeleccionado.value.id, licenciaSeleccionada.value);
-    await listadoCochesStore.obtenerListadoCoches(listadoCochesStore.currentPage, matricula.value);
+    await addLicenciaToCocheStore.addLicenciaToCoche(cocheSeleccionado.value.id, licenciaSeleccionada.value);
+    mostrarMensaje('Licencia asignada correctamente', 'success');
+    await refrescarTabla();
     cerrarModalLicencia();
   } catch (error) {
     console.error('Error al añadir licencia al coche', error);
+    mostrarMensaje('Error al asignar la licencia', 'danger');
   }
 };
 
 const abrirModalAddUsuario = async (coche) => {
   cocheSeleccionado.value = coche;
-  // Aquí deberías cargar los usuarios disponibles
-  // usuariosDisponibles.value = await obtenerUsuariosDisponibles();
+  usuarioSeleccionado.value = '';
   mostrarModalAddUsuario.value = true;
 };
 
@@ -292,18 +303,19 @@ const cerrarModalAddUsuario = () => {
 
 const addUsuarioToCoche = async () => {
   try {
-    await addUsuarioStore.addUsuarioToCoche(cocheSeleccionado.value.id, usuarioSeleccionado.value);
-    await listadoCochesStore.obtenerListadoCoches(listadoCochesStore.currentPage, matricula.value);
+    await AddUsuarioToCoche.addUsuarioToCoche(cocheSeleccionado.value.id, usuarioSeleccionado.value);
+    mostrarMensaje('Usuario asignado correctamente', 'success');
+    await refrescarTabla();
     cerrarModalAddUsuario();
   } catch (error) {
     console.error('Error al añadir usuario al coche', error);
+    mostrarMensaje('Error al asignar el usuario: ' + (error.response?.data?.message || error.message), 'danger');
   }
 };
 
 const abrirModalDeleteUsuario = async (coche) => {
   cocheSeleccionado.value = coche;
-  // Aquí deberías cargar los usuarios del coche
-  // usuariosCoche.value = await obtenerUsuariosCoche(coche.id);
+  usuarioAEliminar.value = '';
   mostrarModalDeleteUsuario.value = true;
 };
 
@@ -314,17 +326,27 @@ const cerrarModalDeleteUsuario = () => {
 
 const deleteUsuarioFromCoche = async () => {
   try {
-    await deleteUsuarioStore.deleteUsuarioFromCoche(cocheSeleccionado.value.id, usuarioAEliminar.value);
-    await listadoCochesStore.obtenerListadoCoches(listadoCochesStore.currentPage, matricula.value);
+    await deleteUsuarioFromCocheStore.deleteUsuarioToCoche(cocheSeleccionado.value.id, usuarioAEliminar.value);
+    mostrarMensaje('Usuario eliminado correctamente', 'success');
+    await refrescarTabla();
     cerrarModalDeleteUsuario();
   } catch (error) {
     console.error('Error al eliminar usuario del coche', error);
+    mostrarMensaje('Error al eliminar el usuario: ' + (error.response?.data?.message || error.message), 'danger');
   }
 };
+
 const refrescarTabla = async () => {
-  await listadoCochesStore.obtenerListadoCoches(0, matricula.value)
-  coches.value=[...listadoCochesStore.coches];
-}
+  await listadoCochesStore.obtenerListadoCoches(listadoCochesStore.currentPage, matricula.value);
+};
+
+const mostrarMensaje = (texto, tipo) => {
+  mensaje.value = texto;
+  mensajeTipo.value = tipo;
+  setTimeout(() => {
+    mensaje.value = '';
+  }, 5000);
+};
 </script>
 
 <style scoped>

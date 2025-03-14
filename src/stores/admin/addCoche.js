@@ -1,6 +1,7 @@
 import axios from "axios";
 import {defineStore} from "pinia";
 import {useLoginAdminStore} from "../loginAdmin"
+import {API_URL} from "@/constants.js";
 
 export const useAddCocheStore = defineStore("addCoche",{
   state:()=>({
@@ -16,11 +17,14 @@ export const useAddCocheStore = defineStore("addCoche",{
       this.error = null
       this.mensaje = null
 
-      if(!token){
-        throw new Error("Token no disponible")
+      if (!token) {
+        this.error = "Token no disponible";
+        console.error("Token no disponible");
+        this.cargando = false;
+        return;
       }
       try {
-        await axios.post("http://localhost:8000/api/admin/addCoche",coche,{
+        await axios.post(`${API_URL}/api/admin/addCoche`,coche,{
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`

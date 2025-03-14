@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import axios from "axios";
 
+import {API_URL} from "@/constants.js";
 export const useRegistroUsuarioStore = defineStore('registroUsuarioStore', {
   state: () => ({
     usuario: null,
@@ -12,7 +13,7 @@ export const useRegistroUsuarioStore = defineStore('registroUsuarioStore', {
       this.cargando = true;
       this.error = null;
       try {
-        const respuesta = await axios.post('http://localhost:8080/api/usuarios/registrar', usuario, {
+        const respuesta = await axios.post(`${API_URL}/api/usuarios/registrar`, usuario, {
           headers: {
             'Content-Type': 'application/json',
           },

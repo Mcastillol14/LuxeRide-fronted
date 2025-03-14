@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import axios from "axios";
 import { useLoginAdminStore } from "../loginAdmin";
 import { debounce } from "lodash";
+import {API_URL} from "@/constants.js";
 
 export const useListadoCochesStore = defineStore("listadoCochesStore", {
   state: () => ({
@@ -29,7 +30,7 @@ export const useListadoCochesStore = defineStore("listadoCochesStore", {
       }
 
       try {
-        const respuesta = await axios.get("http://localhost:8080/api/admin/allCoches", {
+        const respuesta = await axios.get(`${API_URL}/api/admin/allCoches`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,

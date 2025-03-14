@@ -22,6 +22,17 @@ const router = createRouter({
       meta: { requiereAuth: true, roles: ['ROLE_ROL_CLIENTE', 'ROLE_ROL_TAXISTA', 'ROLE_ROL_ADMIN'] }
     },
     {
+      path: '/driver',
+      name: 'Driver',
+      component: () => import('@/views/driverLogin.vue'),
+    },
+    {
+      path: '/driver/dashboard',
+      name: 'Driver-Dashboard',
+      component: () => import('@/views/driverDashboard.vue'),
+      meta: { requiereAuth: true, roles: ['ROLE_ROL_TAXISTA','ROLE_ROL_ADMIN'] }
+    },
+    {
       path: '/admin',
       name: 'Admin',
       component: () => import('@/views/adminLogin.vue'),
@@ -45,7 +56,6 @@ router.beforeEach((to, from, next) => {
         next();
       } else {
         next({ name: 'Index' });
-        alert('No tienes acceso a esta página');
       }
     }
   } else {

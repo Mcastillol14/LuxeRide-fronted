@@ -1,42 +1,49 @@
 <template>
-  <div class="mb-3">
-    <label for="servicios" class="form-label">Servicios</label>
-    <TreeSelect
-      id="servicios"
-      v-model="selectedValue"
-      :options="servicios"
-      selectionMode="single"
-      display="chip"
-      :maxSelectedLabels="1"
-      placeholder="Seleccione servicio"
-      class="w-100"
-      :class="{'p-invalid':errors}"
-    />
-    <small v-if="errors" class="p-error">{{ errors }}</small>
+  <div class="servicio-select">
+    <h3>Seleccionar Servicio</h3>
+    <div v-if="serviciosStore.cargando">Cargando servicios...</div>
+    <div v-else-if="serviciosStore.error">Error: {{ serviciosStore.error }}</div>
+    <div v-else>
+      <Dropdown v-if="servicios.length > 0"
+                v-model="servicioSeleccionado"
+                :options="servicios"
+                optionLabel="tipo"
+                placeholder="Seleccione un servicio"
+                class="w-100"
+                @change="emitirServicio">
+        <template #option="slotProps">
+          <div>
+            <div>{{ slotProps.option.tipo }}</div>
+            <small>{{ slotProps.option.descripcion }} - {{ slotProps.option.precioPorKm }}€/km</small>
+          </div>
+        </template>
+      </Dropdown>
+      <p v-else>No hay servicios disponibles en este momento.</p>
+    </div>
   </div>
 </template>
 
 <script setup>
-import {computed} from "vue";
-import TreeSelect from "primevue/treeselect";
+import { ref, onMounted, computed } from 'vue';
+import Dropdown from 'primevue/dropdown';
+import { useServiciosUserStore } from '@/stores/Usuario/serviciosUser';
 
-const props = defineProps({
-  modelValue: {
-    type: Array,
-    default: () => []
-  },
-  errors: {
-    type: String,
-    defaul: ''
+const emit = defineEmits(['servicio-seleccionado']);
+
+const serviciosStore = useServiciosUserStore();
+const servicioSeleccionado = ref(null);
+
+const servicios = computed(() => serviciosStore.getServicios);
+
+onMounted(async () => {
+  if (servicios.value.length === 0) {
+    await serviciosStore.obtenerTodosServicios();
   }
-})
-const emit = defineEmits(["update:modelValue"]);
-const selectedValue = computed({
-  get: () => props.modelValue,
-  set: (value) => emit('update:modelValue', value)
 });
+
+const emitirServicio = () => {
+  if (servicioSeleccionado.value) {
+    emit('servicio-seleccionado', servicioSeleccionado.value);
+  }
+};
 </script>
-
-<style scoped>
-
-</style>

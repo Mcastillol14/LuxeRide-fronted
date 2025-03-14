@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import axios from "axios";
 import { useLoginAdminStore } from "../loginAdmin";
+import {API_URL} from "@/constants.js";
 
 export const useEditarServicioStore = defineStore("editarServicio", {
   state: () => ({
@@ -21,7 +22,7 @@ export const useEditarServicioStore = defineStore("editarServicio", {
         return;
       }
       try {
-        const response = await axios.put(`http://localhost:8080/api/admin/editarServicio/${id}`,
+        const response = await axios.put(`${API_URL}/api/admin/editarServicio/${id}`,
           datosServicio,
           {
             headers: {

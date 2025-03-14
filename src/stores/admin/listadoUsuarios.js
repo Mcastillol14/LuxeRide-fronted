@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import axios from "axios";
 import { useLoginAdminStore } from "../loginAdmin";
 import debounce from "lodash/debounce";
+import {API_URL} from "@/constants.js";
 
 export const useListadoUsuariosStore = defineStore("listadoUsuarios", {
   state: () => ({
@@ -29,7 +30,7 @@ export const useListadoUsuariosStore = defineStore("listadoUsuarios", {
       }
 
       try {
-        const response = await axios.get("http://localhost:8080/api/admin/allUsuarios", {
+        const response = await axios.get(`${API_URL}/api/admin/allUsuarios`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,

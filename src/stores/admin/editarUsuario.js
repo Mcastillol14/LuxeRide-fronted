@@ -1,6 +1,7 @@
 import axios from "axios";
 import { defineStore } from "pinia";
 import { useLoginAdminStore } from "../loginAdmin";
+import {API_URL} from "@/constants.js";
 
 export const useEditarUsuarioStore = defineStore("editarUsuario", {
   state: () => ({
@@ -24,7 +25,7 @@ export const useEditarUsuarioStore = defineStore("editarUsuario", {
       }
 
       try {
-        const response = await axios.put(`http://localhost:8080/api/admin/editarUsuario/${id}`, null, {
+        const response = await axios.put(`${API_URL}/api/admin/editarUsuario/${id}`, null, {
           params: {
             nombre: datosUsuario.nombre,
             apellidos: datosUsuario.apellidos,

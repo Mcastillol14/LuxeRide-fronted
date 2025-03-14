@@ -1,6 +1,7 @@
 import axios from "axios";
 import { defineStore } from "pinia";
 import { useLoginAdminStore } from "../loginAdmin";
+import {API_URL} from "@/constants.js";
 
 export const useEditarLicenciaStore = defineStore("editarLicencia", {
   state: () => ({
@@ -23,7 +24,7 @@ export const useEditarLicenciaStore = defineStore("editarLicencia", {
 
       try {
         const response = await axios.put(
-          `http://localhost:8080/api/admin/editarLicencia/${id}`,
+          `${API_URL}/api/admin/editarLicencia/${id}`,
           datosLicencia,
           {
             headers: {
