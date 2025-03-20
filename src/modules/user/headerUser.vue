@@ -71,10 +71,7 @@ const toggleUserMenu = (event) => {
 .user-dropdown {
   width: 200px;
 }
-.p-button:focus {
-  box-shadow: none !important;
-  outline: none !important;
-}
+
 
 
 

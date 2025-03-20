@@ -37,6 +37,7 @@ const cocheStore = useCocheStore();
 const loginStore = useLoginUsuarioStore();
 
 onMounted(async () => {
+
   const token = loginStore.token || localStorage.getItem('token');
   if (!token) {
     router.push('/driver');
@@ -50,14 +51,15 @@ onMounted(async () => {
   if (!usuarioStore.id) {
     await usuarioStore.obtenerInfoUsuario();
   }
+
+
+  cocheStore.cargarEstadoServicio();
 });
 
 const buscarCoche = async () => {
   const taxistaId = usuarioStore.id;
   if (taxistaId) {
     await cocheStore.obtenerCochesDisponibles(taxistaId);
-  } else {
-    console.error('ID del taxista no disponible');
   }
 };
 
@@ -75,11 +77,14 @@ const liberarCoche = async () => {
 };
 
 const logout = async () => {
+
   if (cocheStore.enServicio && cocheStore.cocheActual) {
     await cocheStore.liberarCoche(cocheStore.cocheActual.id);
   }
 
   loginStore.logoutUsuario();
+
+  localStorage.removeItem('estadoServicio');
 
   router.push('/driver');
 };

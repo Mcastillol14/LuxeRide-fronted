@@ -22,7 +22,7 @@
 
       <div class="row">
         <div class="col-12 text-center">
-          <p>&copy; {{ currentYear }} LuxeRide. Todos los derechos reservados.</p>
+          <p>&copy; {{ yearActual }} LuxeRide. Todos los derechos reservados.</p>
         </div>
       </div>
     </div>
@@ -32,7 +32,7 @@
 <script setup>
 import { ref } from 'vue';
 
-const currentYear = ref(new Date().getFullYear());
+const yearActual = ref(new Date().getFullYear());
 </script>
 
 <style scoped>

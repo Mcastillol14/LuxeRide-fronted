@@ -16,9 +16,6 @@
 import { ref, watch } from 'vue';
 import InputText from 'primevue/inputtext';
 
-const props = defineProps({
-  titulo: String
-});
 
 const emit = defineEmits(['ubicacion-seleccionada']);
 

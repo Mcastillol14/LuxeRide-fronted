@@ -20,7 +20,6 @@ export const useDeleteUsuarioToCoche = defineStore("deleteUsuarioToCoche", {
 
       if (!token) {
         this.error = "Token no disponible";
-        console.error("Token no disponible");
         this.cargando = false;
         return;
       }

@@ -2,8 +2,15 @@
   <Card>
     <template #title>Estado de Servicio</template>
     <template #content>
-      <div v-if="enServicio" class="mb-3">
-        <Message severity="success">En servicio con el coche: {{ cocheSeleccionado?.matricula }}</Message>
+      <div v-if="enServicio && cocheSeleccionado" class="mb-3">
+        <Message severity="success">
+          En servicio con el coche: {{ cocheSeleccionado.matricula || 'Coche seleccionado' }}
+        </Message>
+        <div class="mt-2">
+          <p v-if="cocheSeleccionado.marca"><strong>Marca:</strong> {{ cocheSeleccionado.marca }}</p>
+          <p v-if="cocheSeleccionado.modelo"><strong>Modelo:</strong> {{ cocheSeleccionado.modelo }}</p>
+          <p v-if="cocheSeleccionado.matricula"><strong>Matrícula:</strong> {{ cocheSeleccionado.matricula }}</p>
+        </div>
       </div>
       <div v-else class="mb-3">
         <Message severity="info">Fuera de servicio</Message>
@@ -17,7 +24,7 @@
       <div v-if="!enServicio && cocheElegido" class="mb-3">
         <Button label="Seleccionar Coche" icon="pi pi-check" @click="seleccionar" class="p-button-success" />
       </div>
-      <div v-if="enServicio" class="mb-3">
+      <div v-if="enServicio && cocheSeleccionado" class="mb-3">
         <Button label="Dejar Coche" icon="pi pi-times" @click="liberar" class="p-button-danger" />
       </div>
     </template>
@@ -25,7 +32,7 @@
 </template>
 
 <script setup>
-import { ref, watch, computed } from 'vue';
+import { ref, watch, computed, onMounted } from 'vue';
 import Card from 'primevue/card';
 import Button from 'primevue/button';
 import Dropdown from 'primevue/dropdown';
@@ -42,11 +49,20 @@ const emit = defineEmits(['buscar-coche', 'seleccionar-coche', 'liberar-coche'])
 const cocheStore = useCocheStore();
 const cocheElegido = ref(null);
 
+
 watch(() => cocheStore.cochesDisponibles, (newValue) => {
   if (newValue.length > 0 && !cocheElegido.value) {
     cocheElegido.value = newValue[0];
   }
 });
+
+watch(() => props.enServicio, (newValue) => {
+  console.log( newValue);
+});
+
+watch(() => props.cocheSeleccionado, (newValue) => {
+  console.log( newValue);
+}, { deep: true });
 
 const buscarCoche = () => {
   emit('buscar-coche');

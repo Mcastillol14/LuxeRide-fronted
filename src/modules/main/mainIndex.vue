@@ -10,7 +10,7 @@
               Nuestra línea de taxis eléctricos de alta gama ofrece una experiencia de viaje inigualable,
               reduciendo la huella de carbono sin comprometer el confort y la elegancia.
             </p>
-            <button @click="openModal('login')" class="btn btn-success btn-lg mb-3">Acceder</button>
+            <button @click="abrirModal('login')" class="btn btn-success btn-lg mb-3">Acceder</button>
           </div>
         </div>
       </div>
@@ -125,23 +125,23 @@
         <h2 class="mb-4 fw-bold" data-aos="fade-up">No viajes. Teletranspórtate con estilo.</h2>
         <p class="lead mb-4" data-aos="fade-up" data-aos-delay="100">LuxeRide: Donde el futuro del transporte se
           encuentra con el presente del lujo.</p>
-        <button @click="openModal('register')" class="btn btn-light btn-lg" data-aos="fade-up"
+        <button @click="abrirModal('register')" class="btn btn-light btn-lg" data-aos="fade-up"
           data-aos-delay="200">Únete a la revolución del transporte</button>
       </div>
     </section>
     <Transition name="modal">
-      <div v-if="showModal" class="modal-backdrop" @click="closeModal">
+      <div v-if="mostrarModal" class="modal-backdrop" @click="closeModal">
         <div class="modal-content" @click.stop>
           <div class="modal-header">
-            <h5 class="modal-title">{{ isLogin ? 'Iniciar sesión' : 'Registrarse' }}</h5>
+            <h5 class="modal-title">{{ estaLogin ? 'Iniciar sesión' : 'Registrarse' }}</h5>
           </div>
           <div class="modal-body">
-            <loginUser v-if="isLogin" />
+            <loginUser v-if="estaLogin" />
             <registerUser v-else />
           </div>
           <div class="modal-footer">
-            <button @click="toggleAuthMode" class="btn btn-link">
-              {{ isLogin ? '¿No tienes cuenta? Regístrate' : '¿Ya tienes cuenta? Inicia sesión' }}
+            <button @click="loginMode" class="btn btn-link">
+              {{ estaLogin ? '¿No tienes cuenta? Regístrate' : '¿Ya tienes cuenta? Inicia sesión' }}
             </button>
           </div>
         </div>
@@ -159,20 +159,20 @@ import 'aos/dist/aos.css';
 import loginUser from './loginUser.vue';
 import registerUser from './registerUser.vue';
 
-const showModal = ref(false);
-const isLogin = ref(true);
+const mostrarModal = ref(false);
+const estaLogin = ref(true);
 
-const openModal = (mode) => {
-  isLogin.value = mode === 'login';
-  showModal.value = true;
+const abrirModal = (mode) => {
+  estaLogin.value = mode === 'login';
+  mostrarModal.value = true;
 };
 
 const closeModal = () => {
-  showModal.value = false;
+  mostrarModal.value = false;
 };
 
-const toggleAuthMode = () => {
-  isLogin.value = !isLogin.value;
+const loginMode = () => {
+  estaLogin.value = !estaLogin.value;
 };
 
 const testimonials = ref([

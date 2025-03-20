@@ -25,7 +25,7 @@ export const useEditarUsuarioStore = defineStore("editarUsuario", {
       }
 
       try {
-        const response = await axios.put(`${API_URL}/api/admin/editarUsuario/${id}`, null, {
+       await axios.put(`${API_URL}/api/admin/editarUsuario/${id}`, null, {
           params: {
             nombre: datosUsuario.nombre,
             apellidos: datosUsuario.apellidos,
@@ -39,7 +39,6 @@ export const useEditarUsuarioStore = defineStore("editarUsuario", {
         }
         );
 
-        console.log("Usuario editado correctamente:", response.data);
       } catch (error) {
         if (error.response?.data?.message) {
           this.error = error.response.data.message;

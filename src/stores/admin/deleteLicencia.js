@@ -21,7 +21,6 @@ export const useDeleteLicenciaStore = defineStore("deleteLicencia", {
 
       if (!token) {
         this.error = "Token no disponible";
-        console.error("Token no disponible");
         this.cargando = false;
         return;
       }

@@ -9,7 +9,7 @@ export const useAddTaxistaStore = defineStore("addTaxista", {
     cargando: false,
   }),
   actions: {
-    async addTaxista(id) {  // Cambié el nombre de la función aquí
+    async addTaxista(id) {
       this.cargando = true;
       this.error = null;
 
@@ -18,22 +18,20 @@ export const useAddTaxistaStore = defineStore("addTaxista", {
 
       if (!token) {
         this.error = "Token no disponible";
-        console.error("Token no disponible");
         this.cargando = false;
         return;
       }
 
       try {
-        const response = await axios.put(`${API_URL}/api/admin/addTaxista/${id}`, null, {
+        await axios.put(`${API_URL}/api/admin/addTaxista/${id}`, null, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           }
         });
-        console.log("Usuario añadido como taxista:", response.data);
       } catch (error) {
         this.error = error.response?.data?.message || error.message;
-        console.error("Error al añadir taxista:", this.error);
+        console.error(this.error);
       } finally {
         this.cargando = false;
       }

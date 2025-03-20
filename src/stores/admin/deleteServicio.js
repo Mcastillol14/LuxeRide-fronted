@@ -19,7 +19,6 @@ export const useDeleteServicioStore = defineStore("deleteServicioStore", {
         this.mensaje = null;
         if (!token) {
           this.error = "Token no disponible";
-          console.error("Token no disponible");
           this.cargando = false;
           return;
         }

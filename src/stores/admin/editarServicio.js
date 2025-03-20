@@ -17,12 +17,11 @@ export const useEditarServicioStore = defineStore("editarServicio", {
       const token = loginStore.token;
       if (!token) {
         this.error = "Token no disponible";
-        console.error("Token no disponible");
         this.cargando = false;
         return;
       }
       try {
-        const response = await axios.put(`${API_URL}/api/admin/editarServicio/${id}`,
+        await axios.put(`${API_URL}/api/admin/editarServicio/${id}`,
           datosServicio,
           {
             headers: {
@@ -31,7 +30,6 @@ export const useEditarServicioStore = defineStore("editarServicio", {
             },
           }
         );
-        console.log("Servicio editado correctamente:", response.data);
       } catch (error) {
         if (error.response?.data?.message) {
           this.error = error.response.data.message;

@@ -30,7 +30,7 @@ export const useListadoUsuariosStore = defineStore("listadoUsuarios", {
       }
 
       try {
-        const response = await axios.get(`${API_URL}/api/admin/allUsuarios`, {
+        const respuesta = await axios.get(`${API_URL}/api/admin/allUsuarios`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -41,9 +41,9 @@ export const useListadoUsuariosStore = defineStore("listadoUsuarios", {
             dni,
           },
         });
-        this.usuarios = response.data.content
-        this.totalPages = response.data.totalPages
-        this.currentPage = response.data.number
+        this.usuarios = respuesta.data.content
+        this.totalPages = respuesta.data.totalPages
+        this.currentPage = respuesta.data.number
       } catch (error) {
         this.error = error.response?.data?.message || error.message;
         console.error("Error al obtener usuarios:", this.error);

@@ -1,7 +1,7 @@
 <template>
   <Dialog
     :visible="modelValue"
-    @update:visible="updateVisibility"
+    @update:visible="cambiarVisibilidad"
     :modal="true"
     :closable="true"
     header="Mi Perfil"
@@ -71,32 +71,19 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue', 'hide']);
 
-onMounted(() => {
-  console.log('Modal montado, userData:', props.userData);
-  if (props.userData) {
-    console.log('ID en el modal:', props.userData.id);
-  }
-});
-
 
 watch(() => props.userData, (newValue) => {
-  console.log('userData actualizado en modal:', newValue);
+  console.log( newValue);
   if (newValue) {
-    console.log('ID en userData actualizado:', newValue.id);
+    console.log(newValue.id);
   }
 }, { immediate: true, deep: true });
 
 watch(() => props.modelValue, (newValue) => {
-  console.log('Visibilidad del modal cambiada a:', newValue);
-  if (newValue && !props.userData) {
-    console.warn('Modal visible pero userData es null o undefined');
-  } else if (newValue && props.userData) {
-    console.log('Modal visible con userData:', props.userData);
-    console.log('ID en userData:', props.userData.id);
-  }
+  console.log( newValue);
 }, { immediate: true });
 
-const updateVisibility = (value) => {
+const cambiarVisibilidad = (value) => {
   emit('update:modelValue', value);
 };
 

@@ -20,13 +20,12 @@ export const useAddLicenciaToCoche = defineStore("addLicenciaToCoche", {
 
       if (!token) {
         this.error = "Token no disponible";
-        console.error("Token no disponible");
         this.cargando = false;
         return;
       }
 
       try {
-        await axios.put(`${API_URL}/${cocheId}/${licenciaId}`, null, {
+        await axios.put(`${API_URL}/api/admin/addLicenciaToCoche/${cocheId}/${licenciaId}`, null, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,

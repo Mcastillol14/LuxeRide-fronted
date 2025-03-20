@@ -99,13 +99,6 @@
                      placeholder="Formato: 1234 ABC">
               <small v-if="mensajeError" class="text-danger">{{ mensajeError }}</small>
             </div>
-            <div class="mb-3">
-              <label>Estado</label>
-              <select v-model="nuevoCoche.estado" class="form-select" required>
-                <option :value="true">Activo</option>
-                <option :value="false">Desactivado</option>
-              </select>
-            </div>
             <button type="submit" class="btn btn-primary mt-3">Añadir Coche</button>
           </form>
         </div>

@@ -12,7 +12,7 @@ export const useUsuarioStore = defineStore("usuario", {
       try {
         userData = JSON.parse(userDataString);
       } catch (error) {
-        console.error('Error al parsear userData de localStorage:', error);
+        console.error( error);
       }
     }
 
@@ -38,7 +38,6 @@ export const useUsuarioStore = defineStore("usuario", {
 
       if (!token) {
         this.error = "Token no disponible";
-        console.error("Token no disponible");
         this.cargando = false;
         return;
       }
@@ -53,10 +52,6 @@ export const useUsuarioStore = defineStore("usuario", {
 
         const { id, nombre, apellidos, dni, email, rol, accountNonLocked } = response.data;
 
-        // Verificar si el ID existe en la respuesta
-        if (id === undefined || id === null) {
-          console.error("El ID no está presente en la respuesta de la API");
-        }
 
         this.id = id;
         this.nombre = nombre;
@@ -66,22 +61,13 @@ export const useUsuarioStore = defineStore("usuario", {
         this.rol = rol;
         this.accountNonLocked = accountNonLocked;
 
-        // Guardar datos en localStorage
         const userData = {
           id, nombre, apellidos, dni, email, rol, accountNonLocked
         };
         localStorage.setItem('userData', JSON.stringify(userData));
-        console.log('Datos de usuario guardados en localStorage');
-
-        console.log("Datos guardados en el store:", {
-          id: this.id,
-          nombre: this.nombre,
-          apellidos: this.apellidos
-        });
 
       } catch (error) {
         this.error = error.response?.data?.message || error.message;
-        console.error("Error al obtener información del usuario:", this.error);
       } finally {
         this.cargando = false;
       }

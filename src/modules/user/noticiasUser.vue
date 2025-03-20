@@ -6,7 +6,7 @@
     </h2>
 
     <div class="row">
-      <div v-for="article in displayedNews" :key="article.id" class="col-md-4 mb-4">
+      <div v-for="article in menuNoticias" :key="article.id" class="col-md-4 mb-4">
         <div class="card">
           <Panel :header="article.title" toggleable>
             <img :src="article.image" :alt="article.title" class="card-img-top mb-2" />
@@ -21,10 +21,10 @@
 
     <div class="text-center mt-3">
       <Button
-        :label="showAll ? 'Ver menos' : 'Ver todas las noticias'"
+        :label="mostrarTodos ? 'Ver menos' : 'Ver todas las noticias'"
         icon="pi pi-list"
         class="custom-button"
-        @click="toggleNews"
+        @click="botonNoticias"
       />
     </div>
   </section>
@@ -80,9 +80,9 @@ const allNews = [
   }
 ];
 
-const showAll = ref(false);
-const displayedNews = computed(() => showAll.value ? allNews : allNews.slice(0, 3));
-const toggleNews = () => showAll.value = !showAll.value;
+const mostrarTodos = ref(false);
+const menuNoticias = computed(() => mostrarTodos.value ? allNews : allNews.slice(0, 3));
+const botonNoticias = () => mostrarTodos.value = !mostrarTodos.value;
 </script>
 
 <style scoped>

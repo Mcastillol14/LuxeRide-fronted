@@ -3,17 +3,14 @@
     <Card class="p-3 shadow-sm mx-auto" style="max-width: 400px;">
       <template #content>
         <form @submit.prevent="enviarFormulario">
-          <!-- Agrupación de campos de 2 en 2 -->
-          <div class="d-flex gap-2">
-            <!-- Nombre -->
-            <div class="w-50">
+ç          <div class="d-flex gap-2">
+ç            <div class="w-50">
               <label for="nombre" class="form-label text-sm">Nombre</label>
               <InputText id="nombre" v-model="datosFormulario.nombre" class="w-100 text-sm" :class="{'p-invalid': errors.nombre}" placeholder="Tu nombre" />
               <small v-if="errors.nombre" class="p-error">{{ errors.nombre }}</small>
             </div>
 
-            <!-- Apellidos -->
-            <div class="w-50">
+ç            <div class="w-50">
               <label for="apellidos" class="form-label text-sm">Apellidos</label>
               <InputText id="apellidos" v-model="datosFormulario.apellidos" class="w-100 text-sm" :class="{'p-invalid': errors.apellidos}" placeholder="Tus apellidos" />
               <small v-if="errors.apellidos" class="p-error">{{ errors.apellidos }}</small>
@@ -21,15 +18,13 @@
           </div>
 
           <div class="d-flex gap-2 mt-2">
-            <!-- DNI -->
-            <div class="w-50">
+ç            <div class="w-50">
               <label for="dni" class="form-label text-sm">DNI</label>
               <InputText id="dni" v-model="datosFormulario.dni" class="w-100 text-sm" :class="{'p-invalid': errors.dni}" placeholder="DNI" maxlength="9" />
               <small v-if="errors.dni" class="p-error">{{ errors.dni }}</small>
             </div>
 
-            <!-- Correo Electrónico -->
-            <div class="w-50">
+ç            <div class="w-50">
               <label for="email" class="form-label text-sm">Email</label>
               <InputText id="email" v-model="datosFormulario.email" class="w-100 text-sm" :class="{'p-invalid': errors.email}" placeholder="Email" />
               <small v-if="errors.email" class="p-error">{{ errors.email }}</small>
@@ -43,16 +38,13 @@
               <small v-if="errors.password" class="p-error">{{ errors.password }}</small>
             </div>
 
-          <!-- Botón de Registro -->
-          <Button type="submit" label="Registrarse" class="w-100 p-button-sm mt-3" :loading="isSubmitting" />
+ç          <Button type="submit" label="Registrarse" class="w-100 p-button-sm mt-3" :loading="isSubmitting" />
 
-          <!-- Mensajes de error del servidor -->
-          <small v-if="mensajesError.length" class="p-error d-block mt-1 text-center text-sm">
+ç          <small v-if="mensajesError.length" class="p-error d-block mt-1 text-center text-sm">
             {{ mensajesError[0].mensaje }}
           </small>
 
-          <!-- Mensaje de éxito -->
-          <Message v-if="registroExitoso" severity="success" class="mt-2 text-center text-sm">
+ç          <Message v-if="registroExitoso" severity="success" class="mt-2 text-center text-sm">
             ¡Registro exitoso!
           </Message>
         </form>
@@ -76,7 +68,6 @@ const errors = ref({});
 const isSubmitting = ref(false);
 const registroExitoso = ref(false);
 
-// Validaciones
 const validarDNI = (dni) => /^[0-9]{8}[A-Z]$/i.test(dni);
 const validarPassword = (password) => {
   if (password.length > 8) return 'Máximo 8 caracteres';
@@ -101,7 +92,6 @@ const validarFormulario = () => {
   return Object.keys(errors.value).length === 0;
 };
 
-// Enviar formulario
 const enviarFormulario = async () => {
   if (!validarFormulario()) return;
   isSubmitting.value = true;

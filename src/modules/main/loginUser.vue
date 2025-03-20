@@ -3,7 +3,6 @@
     <Card class="p-4 shadow-sm mx-auto" style="max-width: 400px;">
       <template #content>
         <form @submit.prevent="enviarFormulario" aria-label="Formulario de inicio de sesión">
-          <!-- Correo Electrónico -->
           <div class="mb-3">
             <label for="email" class="form-label">Email</label>
             <InputText
@@ -17,7 +16,6 @@
             <small v-if="errors.email" class="p-error" id="email-help">{{ errors.email }}</small>
           </div>
 
-          <!-- Contraseña -->
           <div class="mb-3">
             <label for="password" class="form-label">Contraseña</label>
             <Password
@@ -34,7 +32,6 @@
             <small v-if="errors.passwordLogin" class="p-error" id="password-help">{{ errors.passwordLogin }}</small>
           </div>
 
-          <!-- Botón de Enviar -->
           <Button
             type="submit"
             label="Iniciar sesión"
@@ -46,7 +43,6 @@
       </template>
     </Card>
 
-    <!-- Mensaje de Error -->
     <small v-if="mensajeError" class="error-message">{{ mensajeError }}</small>
   </div>
 </template>
@@ -58,7 +54,6 @@ import router from '@/router';
 import InputText from 'primevue/inputtext';
 import Password from 'primevue/password';
 import Button from 'primevue/button';
-import Message from 'primevue/message';
 import Card from 'primevue/card';
 
 const storeLogin = useLoginUsuarioStore();
@@ -67,7 +62,6 @@ const mensajeError = ref('');
 const errors = ref({});
 const isSubmitting = ref(false);
 
-// Validación del formulario
 const validarFormulario = () => {
   errors.value = {};
   if (!datosFormulario.value.email) {
@@ -81,7 +75,6 @@ const validarFormulario = () => {
   return Object.keys(errors.value).length === 0;
 };
 
-// Función para enviar el formulario
 const enviarFormulario = async () => {
   if (!validarFormulario()) return;
 
@@ -122,13 +115,11 @@ const enviarFormulario = async () => {
   border: 1px solid #ccc;
 }
 
-/* Estilo para el campo inválido */
 .p-invalid {
   border-color: #f44336;
   background-color: #ffe6e6;
 }
 
-/* Estilo para los errores */
 .p-error {
   font-size: 0.75rem;
   color: #f44336;
@@ -160,7 +151,6 @@ button:disabled:hover {
   background-color: #dcdcdc;
 }
 
-/* Asegura que los inputs tengan suficiente espacio */
 input, button {
   border-radius: 4px;
   padding: 8px 12px;

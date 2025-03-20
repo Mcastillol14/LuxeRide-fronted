@@ -21,7 +21,6 @@ export const useAddServicioStore = defineStore("addServicio", {
 
       if (!token) {
         this.error = "Token no disponible";
-        console.error("Token no disponible");
         this.cargando = false;
         return;
       }

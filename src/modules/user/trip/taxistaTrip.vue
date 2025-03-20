@@ -15,27 +15,34 @@
     </div>
     <div v-if="cocheSeleccionado" class="mt-3">
       <h4>Taxista asignado:</h4>
-      <p v-if="cocheSeleccionado.taxista">
-        {{ cocheSeleccionado.taxista.nombre }} {{ cocheSeleccionado.taxista.apellidos }}
-      </p>
+      <div v-if="taxistaAsignado" class="taxista-info">
+        <p> {{ taxistaAsignado.nombre }} {{ taxistaAsignado.apellidos }}</p>
+      </div>
+      <div v-else-if="cocheSeleccionado.taxista" class="taxista-info">
+        <p><strong>Nombre:</strong> {{ cocheSeleccionado.taxista.nombre }} {{ cocheSeleccionado.taxista.apellidos }}</p>
+        <p v-if="cocheSeleccionado.taxista.id"><strong>ID:</strong> {{ cocheSeleccionado.taxista.id }}</p>
+      </div>
       <p v-else>No hay taxista asignado a este coche.</p>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, watch, computed } from 'vue';
 import Dropdown from 'primevue/dropdown';
 import { useCochesUser } from '@/stores/Usuario/cochesUser.js';
+import { useCocheStore } from '@/stores/Taxista/cochesDriver.js';
 
 const emit = defineEmits(['taxista-seleccionado']);
 
 const cochesStore = useCochesUser();
+const cocheDriverStore = useCocheStore();
 const cochesEnServicio = ref([]);
 const cocheSeleccionado = ref(null);
 
 onMounted(async () => {
   await cochesStore.obtenerCochesUser();
+  cocheDriverStore.cargarTaxistasEnServicio();
   actualizarCochesEnServicio();
 });
 
@@ -43,15 +50,23 @@ watch(() => cochesStore.cochesEnServicio, actualizarCochesEnServicio);
 
 function actualizarCochesEnServicio() {
   cochesEnServicio.value = cochesStore.cochesEnServicio;
-  console.log("Coches en servicio actualizados:", cochesEnServicio.value);
 }
+
+const taxistaAsignado = computed(() => {
+  if (!cocheSeleccionado.value) return null;
+
+  return cocheDriverStore.obtenerTaxistaPorCoche(cocheSeleccionado.value.id);
+});
 
 const emitirSeleccion = () => {
   if (cocheSeleccionado.value) {
+    const taxista = taxistaAsignado.value || cocheSeleccionado.value.taxista;
+
     emit('taxista-seleccionado', {
       coche: cocheSeleccionado.value,
-      taxista: cocheSeleccionado.value.taxista
+      taxista: taxista
     });
   }
 };
 </script>
+

@@ -20,7 +20,6 @@ export const useAddUsuarioToCoche = defineStore("addUsuarioToCoche", {
 
       if (!token) {
         this.error = "Token no disponible";
-        console.error("Token no disponible");
         this.cargando = false;
         return;
       }

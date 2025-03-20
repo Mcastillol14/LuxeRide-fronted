@@ -18,22 +18,19 @@ export const useBloquearCuentaStore = defineStore("bloquearCuenta", {
 
       if (!token) {
         this.error = "Token no disponible";
-        console.error("Token no disponible");
         this.cargando = false;
         return;
       }
 
       try {
-        const response = await axios.put(`${API_URL}/api/admin/bloquearCuenta/${id}`, null, {
+         await axios.put(`${API_URL}/api/admin/bloquearCuenta/${id}`, null, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           }
         });
-        console.log("Cuenta bloqueada correctamente:", response.data);
       } catch (error) {
         this.error = error.response?.data?.message || error.message;
-        console.error("Error al bloquear cuenta:", this.error);
       } finally {
         this.cargando = false;
       }
