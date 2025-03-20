@@ -3,14 +3,14 @@
     <Card class="p-3 shadow-sm mx-auto" style="max-width: 400px;">
       <template #content>
         <form @submit.prevent="enviarFormulario">
-ç          <div class="d-flex gap-2">
-ç            <div class="w-50">
+         <div class="d-flex gap-2">
+            <div class="w-50">
               <label for="nombre" class="form-label text-sm">Nombre</label>
               <InputText id="nombre" v-model="datosFormulario.nombre" class="w-100 text-sm" :class="{'p-invalid': errors.nombre}" placeholder="Tu nombre" />
               <small v-if="errors.nombre" class="p-error">{{ errors.nombre }}</small>
             </div>
 
-ç            <div class="w-50">
+            <div class="w-50">
               <label for="apellidos" class="form-label text-sm">Apellidos</label>
               <InputText id="apellidos" v-model="datosFormulario.apellidos" class="w-100 text-sm" :class="{'p-invalid': errors.apellidos}" placeholder="Tus apellidos" />
               <small v-if="errors.apellidos" class="p-error">{{ errors.apellidos }}</small>
@@ -18,13 +18,13 @@
           </div>
 
           <div class="d-flex gap-2 mt-2">
-ç            <div class="w-50">
+            <div class="w-50">
               <label for="dni" class="form-label text-sm">DNI</label>
               <InputText id="dni" v-model="datosFormulario.dni" class="w-100 text-sm" :class="{'p-invalid': errors.dni}" placeholder="DNI" maxlength="9" />
               <small v-if="errors.dni" class="p-error">{{ errors.dni }}</small>
             </div>
 
-ç            <div class="w-50">
+        <div class="w-50">
               <label for="email" class="form-label text-sm">Email</label>
               <InputText id="email" v-model="datosFormulario.email" class="w-100 text-sm" :class="{'p-invalid': errors.email}" placeholder="Email" />
               <small v-if="errors.email" class="p-error">{{ errors.email }}</small>
@@ -38,13 +38,13 @@
               <small v-if="errors.password" class="p-error">{{ errors.password }}</small>
             </div>
 
-ç          <Button type="submit" label="Registrarse" class="w-100 p-button-sm mt-3" :loading="isSubmitting" />
+          <Button type="submit" label="Registrarse" class="w-100 p-button-sm mt-3" :loading="isSubmitting" />
 
-ç          <small v-if="mensajesError.length" class="p-error d-block mt-1 text-center text-sm">
+          <small v-if="mensajesError.length" class="p-error d-block mt-1 text-center text-sm">
             {{ mensajesError[0].mensaje }}
           </small>
 
-ç          <Message v-if="registroExitoso" severity="success" class="mt-2 text-center text-sm">
+          <Message v-if="registroExitoso" severity="success" class="mt-2 text-center text-sm">
             ¡Registro exitoso!
           </Message>
         </form>

@@ -62,6 +62,13 @@ const emitirSeleccion = () => {
   if (cocheSeleccionado.value) {
     const taxista = taxistaAsignado.value || cocheSeleccionado.value.taxista;
 
+    if (taxista) {
+      localStorage.setItem('taxistaSeleccionado', JSON.stringify({
+        coche: cocheSeleccionado.value,
+        taxista: taxista
+      }));
+    }
+
     emit('taxista-seleccionado', {
       coche: cocheSeleccionado.value,
       taxista: taxista

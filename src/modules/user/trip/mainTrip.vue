@@ -54,12 +54,14 @@ import { useViajesUsuarioStore } from '@/stores/Usuario/viajesUser.js';
 import { useLoginUsuarioStore } from "@/stores/loginUser.js";
 import { useUsuarioStore } from "@/stores/Usuario/infoUser.js";
 import { useServiciosUserStore } from "@/stores/Usuario/serviciosUser.js";
+import {usePdfUsuarioStore} from "@/stores/Usuario/pdfUser.js";
 import router from "@/router/index.js";
 
 const viajesStore = useViajesUsuarioStore();
 const loginStore = useLoginUsuarioStore();
 const usuarioStore = useUsuarioStore();
 const serviciosStore = useServiciosUserStore();
+const pdfStore=usePdfUsuarioStore();
 
 const origen = ref({ calle: '', ciudad: '' });
 const destino = ref({ calle: '', ciudad: '' });
@@ -178,7 +180,7 @@ const confirmarViaje = async () => {
 
 const simularProgresoViaje = () => {
   const intervalo = setInterval(() => {
-    progresoViaje.value += 10;
+    progresoViaje.value += 15;
     if (progresoViaje.value <= 33) {
       estadoViajeTexto.value = 'Esperando taxista';
     } else if (progresoViaje.value <= 66) {
@@ -211,13 +213,32 @@ const resetearCampos = () => {
   deshabilitarCampos.value = false;
 }
 
-const descargarPDF = () => {
+const descargarPDF = async () => {
   console.log('Función para descargar PDF (aún no implementada)');
 
-  setTimeout(()=>{
-    router.push("/home")
-  },2000)
+  // Obtener el userData desde localStorage
+  const userData = localStorage.getItem('userData');
+  if (userData) {
+    try {
+      const parsedUserData = JSON.parse(userData);
+      const idUsuario = parsedUserData.id; // Obtener el id del usuario
+      console.log("ID del usuario:", idUsuario);
+
+      // Llamada al store para obtener el PDF
+      await pdfStore.obtenerPdf(idUsuario);
+
+      // Redirigir después de la descarga (2 segundos de espera)
+      setTimeout(() => {
+        router.push("/home")
+      }, 2000);
+    } catch (error) {
+      console.error("Error al parsear userData:", error);
+    }
+  } else {
+    console.error("No se encontró userData en localStorage");
+  }
 }
+
 
 const cerrarModalFinal = () => {
   mostrarModalFinal.value = false;
@@ -227,6 +248,10 @@ const cerrarModalFinal = () => {
 
   // Limpiar datos del viaje actual
   resetearCampos();
+
+  // Remove taxista information from localStorage
+  localStorage.removeItem('taxistaSeleccionado');
+
   router.push("/home")
 }
 
@@ -246,3 +271,4 @@ onMounted(() => {
   }
 })
 </script>
+
