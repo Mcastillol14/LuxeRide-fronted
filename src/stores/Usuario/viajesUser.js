@@ -23,7 +23,7 @@ export const useViajesUsuarioStore = defineStore('viajesUsuario', {
         const response = await axios.post(
           "https://europe-southwest1-lucid-mariner-442915-p4.cloudfunctions.net/Rutas2",
           {
-            api_key: "AIzaSyBhgamsYkctswgfv5SBiMbZ1ir1GDR5wo4",
+            api_key: "API_KEY",
             origen: origen,
             destino: destino
           },
