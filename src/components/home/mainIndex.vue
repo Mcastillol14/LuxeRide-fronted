@@ -140,8 +140,8 @@
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue';
-import loginUser from './loginUser.vue';
-import registerUser from './registerUser.vue';
+import loginUser from '../auth/loginUser.vue';
+import registerUser from '../auth/registerUser.vue';
 
 const testimonios = [
   {

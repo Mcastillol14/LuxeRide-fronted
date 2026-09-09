@@ -42,7 +42,7 @@ import { useRouter } from 'vue-router';
 import { defineRule, Field, Form } from 'vee-validate';
 import { datosStore } from '@/stores/loginUser.js';
 import { email } from '@vee-validate/rules';
-import loginError from '../error/loginError.vue';
+import loginError from './loginError.vue';
 
 
 const storeLogin = datosStore();

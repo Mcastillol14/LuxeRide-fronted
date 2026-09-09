@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from 'vitest'
 import { mount, flushPromises } from '@vue/test-utils'
 import { createTestingPinia } from '@pinia/testing'
 import { createRouter, createMemoryHistory } from 'vue-router'
-import LoginUser from '../main/loginUser.vue'
+import LoginUser from './loginUser.vue'
 
 // loginError.vue no tiene contexto propio (usa useField dentro del Form de loginUser.vue),
 // asi que lo probamos montado dentro del form real, igual que en produccion

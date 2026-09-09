@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { mount, flushPromises } from '@vue/test-utils'
 import { createTestingPinia } from '@pinia/testing'
-import RegisterUser from '../main/registerUser.vue'
+import RegisterUser from './registerUser.vue'
 
 // registerError.vue tampoco tiene contexto propio (useField vive dentro del Form
 // de registerUser.vue), lo probamos montado ahi igual que en produccion

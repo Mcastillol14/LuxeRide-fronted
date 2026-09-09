@@ -77,7 +77,7 @@ import { Field, Form } from 'vee-validate';
 import { email, min } from '@vee-validate/rules';
 import { defineRule } from 'vee-validate';
 import { datosStore } from '../../stores/registerUser';
-import ErrorMessage from '../error/registerError.vue';
+import ErrorMessage from './registerError.vue';
 
 const store = datosStore();
 

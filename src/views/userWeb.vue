@@ -5,7 +5,7 @@
 </template>
 
 <script setup>
-import footerWeb from '@/modules/main/footerIndex.vue';
+import footerWeb from '@/components/layout/footerIndex.vue';
 </script>
 
 <style scoped>

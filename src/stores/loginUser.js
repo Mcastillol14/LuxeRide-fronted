@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { postUsuario } from "./httpUsuarios";
+import { postUsuario } from "../api/usuariosApi";
 
 export const datosStore = defineStore('login', {
   state: () => ({
