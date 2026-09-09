@@ -192,6 +192,8 @@ const indiceTestimonio = ref(0);
 const testimoniosPorPagina = 3;
 const tiempoCambio = ref(null);
 
+// el indice avanza de a 1 testimonio pero el carousel se mueve de a "paginas" de 3,
+// por eso el floor
 const currentSlide = computed(() => Math.floor(indiceTestimonio.value / testimoniosPorPagina));
 
 const cambioTestimonio = () => {

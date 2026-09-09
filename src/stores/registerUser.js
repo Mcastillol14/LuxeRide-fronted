@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import axios from "axios";
+import { postUsuario } from "./httpUsuarios";
 
 export const datosStore = defineStore('registro', {
   state: () => ({
@@ -12,12 +12,7 @@ export const datosStore = defineStore('registro', {
       this.cargando = true;
       this.error = null;
       try {
-        const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080';
-        const respuesta = await axios.post(`${apiUrl}/api/usuarios/registrar`, usuario, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+        const respuesta = await postUsuario('/api/usuarios/registrar', usuario);
         this.usuario = respuesta.data;
         return respuesta;
       } catch (error) {

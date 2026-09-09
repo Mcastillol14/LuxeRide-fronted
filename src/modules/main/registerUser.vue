@@ -72,7 +72,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import { Field, Form } from 'vee-validate';
 import { email, min } from '@vee-validate/rules';
 import { defineRule } from 'vee-validate';
@@ -101,6 +101,7 @@ defineRule('requiredCheckbox', (value) => {
 defineRule('min', min);
 
 defineRule('dni', (value) => {
+  // formato dni español: 8 numeros + 1 letra, no valida la letra de control
   const patronDni = /^[0-9]{8}[A-Za-z]$/;
   if (!value || value.trim() === '') {
     return 'El DNI es obligatorio';
@@ -111,17 +112,17 @@ defineRule('dni', (value) => {
   return true;
 });
 
-const reglasConfirmPassword = computed(() => {
-  return (value) => {
-    if (!value) {
-      return 'La confirmación de contraseña es obligatoria';
-    }
-    if (value !== datosFormulario.value.password) {
-      return 'Las contraseñas no coinciden';
-    }
-    return true;
-  };
-});
+// no hace falta computed aca: el closure ya lee datosFormulario.value.password
+// al momento de cada validacion, no cuando se declara la funcion
+const reglasConfirmPassword = (value) => {
+  if (!value) {
+    return 'La confirmación de contraseña es obligatoria';
+  }
+  if (value !== datosFormulario.value.password) {
+    return 'Las contraseñas no coinciden';
+  }
+  return true;
+};
 
 
 const datosFormulario = ref({

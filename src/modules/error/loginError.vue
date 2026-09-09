@@ -15,6 +15,9 @@ const props = defineProps({
 
 const { errorMessage } = useField(props.name);
 
+// vacio por ahora, no hay overrides en login todavia. si se agrega uno la key
+// tiene que ser el texto exacto que devuelve vee-validate (no el nombre del campo,
+// a diferencia de registerError.vue)
 const mensajeErrorPersonalizado = {
 
 };
