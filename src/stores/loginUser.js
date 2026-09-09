@@ -12,7 +12,8 @@ export const datosStore = defineStore('login', {
       this.cargando = true;
       this.error = null;
       try {
-        const respuesta = await axios.post('http://localhost:8080/api/users/login', usuario, {
+        const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+        const respuesta = await axios.post(`${apiUrl}/api/usuarios/iniciar`, usuario, {
           headers: {
             'Content-Type': 'application/json',
           },

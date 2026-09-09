@@ -17,12 +17,12 @@ const props = defineProps({
 
 const { errorMessage } = useField(props.name);
 
+// vee-validate cae en el mensaje genérico "{field} is not valid." cuando una
+// regla (p.ej. email, min) falla sin devolver su propio texto; para esos
+// campos mostramos un mensaje en español en su lugar.
 const mensajeErrorPersonalizado = {
   email: 'Por favor, introduce un correo electrónico válido',
-  min: 'Este campo debe tener al menos 8 caracteres',
-  dni: 'El DNI introducido no es válido',
-  confirmarPassword: 'Las contraseñas no coinciden',
-  aceptoTerminos: 'Debes aceptar los términos y condiciones'
+  password: 'La contraseña debe tener al menos 8 caracteres',
 };
 
 const mostrarMensajeError = computed(() => {
@@ -38,8 +38,11 @@ const mostrarMensajeError = computed(() => {
     return '';
   }
 
-  const errorKey = errorMessage.value.toLowerCase();
-  return mensajeErrorPersonalizado[errorKey] || errorMessage.value;
+  const esMensajeGenerico = errorMessage.value === `${props.name} is not valid.`;
+  if (esMensajeGenerico && mensajeErrorPersonalizado[props.name]) {
+    return mensajeErrorPersonalizado[props.name];
+  }
+  return errorMessage.value;
 });
 </script>
 

@@ -12,7 +12,8 @@ export const datosStore = defineStore('registro', {
       this.cargando = true;
       this.error = null;
       try {
-        const respuesta = await axios.post('http://localhost:8080/api/users/register', usuario, {
+        const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+        const respuesta = await axios.post(`${apiUrl}/api/usuarios/registrar`, usuario, {
           headers: {
             'Content-Type': 'application/json',
           },

@@ -140,8 +140,8 @@ const enviarFormulario = async (values, { resetForm }) => {
   try {
     mensajeExito.value = '';
     const usuario = {
-      name: datosFormulario.value.name,
-      lastName: datosFormulario.value.lastName,
+      nombre: datosFormulario.value.name,
+      apellidos: datosFormulario.value.lastName,
       dni: datosFormulario.value.dni,
       email: datosFormulario.value.email,
       password: datosFormulario.value.password,

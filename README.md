@@ -16,6 +16,14 @@ See [Vite Configuration Reference](https://vite.dev/config/).
 npm install
 ```
 
+### Configuración
+
+La URL del backend es configurable mediante la variable de entorno `VITE_API_URL` (por defecto `http://localhost:8080`). Para apuntar a otro entorno, crea un `.env.local`:
+
+```
+VITE_API_URL=https://tu-backend.example.com
+```
+
 ### Compile and Hot-Reload for Development
 
 ```sh
